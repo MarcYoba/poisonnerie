@@ -39,9 +39,16 @@ class Produit
     #[ORM\OneToMany(targetEntity: LigneVente::class, mappedBy: 'produit')]
     private Collection $ligneVentes;
 
+    /**
+     * @var Collection<int, Achat>
+     */
+    #[ORM\OneToMany(targetEntity: Achat::class, mappedBy: 'produit')]
+    private Collection $achats;
+
     public function __construct()
     {
         $this->ligneVentes = new ArrayCollection();
+        $this->achats = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -145,6 +152,36 @@ class Produit
             // set the owning side to null (unless already changed)
             if ($ligneVente->getProduit() === $this) {
                 $ligneVente->setProduit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Achat>
+     */
+    public function getAchats(): Collection
+    {
+        return $this->achats;
+    }
+
+    public function addAchat(Achat $achat): static
+    {
+        if (!$this->achats->contains($achat)) {
+            $this->achats->add($achat);
+            $achat->setProduit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAchat(Achat $achat): static
+    {
+        if ($this->achats->removeElement($achat)) {
+            // set the owning side to null (unless already changed)
+            if ($achat->getProduit() === $this) {
+                $achat->setProduit(null);
             }
         }
 

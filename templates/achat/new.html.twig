@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Achat{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+<div class="min-vh-100 py-4 px-3 px-md-5" style="background-color: #F8FAFC;">
+    <div class="container-fluid max-w-4xl mx-auto">
+
+        {# Barre d'en-tête et retour #}
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <a href="{{ path('app_achat_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 mb-2">
+                    <i class="fas fa-arrow-left me-2"></i>back to list
+                </a>
+                <h2 class="fw-bold mb-0" style="color: #0F172A;">
+                    <i class="fas fa-shopping-cart me-2" style="color: #D4AF37;"></i>Create new Achat
+                </h2>
+            </div>
+        </div>
+
+        {# Carte principale contenant le formulaire #}
+        <div class="card shadow border-0 overflow-hidden" style="border-radius: 16px; background-color: #FFFFFF;">
+            
+            {# En-tête Midnight Blue & Gold #}
+            <div class="card-header text-white p-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border-bottom: 4px solid #D4AF37;">
+                <div>
+                    <span class="badge bg-white bg-opacity-10 text-uppercase fs-7 mb-1" style="color: #D4AF37;">Nouveau Registre</span>
+                    <h4 class="fw-bold mb-0 text-white">Enregistrement d'Achat</h4>
+                </div>
+                <div class="rounded-circle p-3 text-center" style="background-color: rgba(212, 175, 55, 0.15); color: #D4AF37;">
+                    <i class="fas fa-cart-plus fa-lg"></i>
+                </div>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                {# Inclusion du formulaire réutilisable d'achat #}
+                {{ include('achat/_form.html.twig') }}
+            </div>
+
+            {# Pied de carte #}
+            <div class="card-footer bg-light py-3 px-4 d-flex justify-content-between align-items-center border-top">
+                <a href="{{ path('app_achat_index') }}" class="btn btn-sm btn-outline-dark">
+                    <i class="fas fa-list me-1"></i> back to list
+                </a>
+                <span class="text-muted small">
+                    <i class="fas fa-info-circle me-1"></i>Remplissez tous les champs requis pour valider l'entrée.
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

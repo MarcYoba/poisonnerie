@@ -1,0 +1,78 @@
+{{ form_start(form, {'attr': {'class': 'needs-validation'}}) }}
+
+    {# Erreurs globales du formulaire #}
+    {% if form_errors(form) %}
+        <div class="alert alert-danger border-0 shadow-sm mb-4 rounded-3">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle fa-lg me-3"></i>
+                <div>{{ form_errors(form) }}</div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row g-3">
+        {# Produit / Article #}
+        {% if form.produit is defined %}
+            <div class="col-md-12 mb-3">
+                <label for="{{ form.produit.vars.id }}" class="form-label fw-semibold text-dark">
+                    <i class="fas fa-box me-1" style="color: #D4AF37;"></i>Produit / Article
+                </label>
+                {{ form_widget(form.produit, {'attr': {'class': 'form-select form-select-lg border-1 shadow-sm'}}) }}
+                <div class="text-danger small mt-1">{{ form_errors(form.produit) }}</div>
+            </div>
+        {% endif %}
+
+        {# Quantité #}
+        {% if form.quantite is defined %}
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.quantite.vars.id }}" class="form-label fw-semibold text-dark">
+                    <i class="fas fa-sort-numeric-up me-1" style="color: #D4AF37;"></i>Quantité
+                </label>
+                {{ form_widget(form.quantite, {'attr': {'class': 'form-control border-1 shadow-sm', 'placeholder': 'Ex: 10'}}) }}
+                <div class="text-danger small mt-1">{{ form_errors(form.quantite) }}</div>
+            </div>
+        {% endif %}
+
+        {# Prix #}
+        {% if form.prix is defined %}
+            <div class="col-md-6 mb-3">
+                <label for="{{ form.prix.vars.id }}" class="form-label fw-semibold text-dark">
+                    <i class="fas fa-tag me-1" style="color: #D4AF37;"></i>Prix Unitaire
+                </label>
+                {{ form_widget(form.prix, {'attr': {'class': 'form-control border-1 shadow-sm', 'placeholder': 'Ex: 5000'}}) }}
+                <div class="text-danger small mt-1">{{ form_errors(form.prix) }}</div>
+            </div>
+        {% endif %}
+
+        {# Date (createtAt / createdAt) #}
+        {% if form.createtAt is defined %}
+            <div class="col-md-12 mb-3">
+                <label for="{{ form.createtAt.vars.id }}" class="form-label fw-semibold text-dark">
+                    <i class="far fa-calendar-alt me-1" style="color: #D4AF37;"></i>Date de création
+                </label>
+                {{ form_widget(form.createtAt, {'attr': {'class': 'form-control border-1 shadow-sm'}}) }}
+                <div class="text-danger small mt-1">{{ form_errors(form.createtAt) }}</div>
+            </div>
+        {% elseif form.createdAt is defined %}
+            <div class="col-md-12 mb-3">
+                <label for="{{ form.createdAt.vars.id }}" class="form-label fw-semibold text-dark">
+                    <i class="far fa-calendar-alt me-1" style="color: #D4AF37;"></i>Date de création
+                </label>
+                {{ form_widget(form.createdAt, {'attr': {'class': 'form-control border-1 shadow-sm'}}) }}
+                <div class="text-danger small mt-1">{{ form_errors(form.createdAt) }}</div>
+            </div>
+        {% endif %}
+
+        {# Rendu de tous les autres champs éventuels (CSRF, etc.) #}
+        {{ form_rest(form) }}
+    </div>
+
+    {# Barre d'action et bouton de validation #}
+    <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
+        <button class="btn text-white fw-bold px-4 py-2 shadow-sm d-inline-flex align-items-center" style="background-color: #0F172A; border-left: 4px solid #D4AF37; border-radius: 8px;" type="submit">
+            <i class="fas fa-save me-2" style="color: #D4AF37;"></i>
+            <span>{{ button_label|default('Save') }}</span>
+        </button>
+    </div>
+
+{{ form_end(form) }}

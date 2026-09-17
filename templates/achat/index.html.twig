@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Achat index{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+<div class="min-vh-100 py-4 px-3 px-md-5" style="background-color: #F8FAFC;">
+    <div class="container-fluid">
+
+        {# En-tête de page Midnight Blue & Gold #}
+        <div class="card border-0 shadow-sm mb-4" style="border-radius: 14px; background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border-left: 6px solid #D4AF37 !important;">
+            <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                <div class="mb-3 mb-md-0">
+                    <h2 class="fw-bold text-white mb-1 d-flex align-items-center">
+                        <span class="badge rounded-circle p-2 me-3" style="background-color: rgba(212, 175, 55, 0.15); color: #D4AF37;">
+                            <i class="fas fa-shopping-bag fa-sm"></i>
+                        </span>
+                        Achat index
+                    </h2>
+                    <p class="text-light text-opacity-75 small mb-0 ms-md-5">Gestion et suivi de l'historique des achats d'approvisionnement.</p>
+                </div>
+                <div>
+                    <a href="{{ path('app_achat_new') }}" class="btn fw-bold px-4 py-2 shadow-sm" style="background-color: #D4AF37; color: #0F172A; border-radius: 8px;">
+                        <i class="fas fa-plus-circle me-2"></i>Create new
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# Carte principale avec tableau #}
+        <div class="card shadow border-0" style="border-radius: 14px; background-color: #FFFFFF;">
+            
+            {# Barre supérieure de la carte #}
+            <div class="card-header bg-white py-3 px-4 d-flex justify-content-between align-items-center border-bottom">
+                <span class="fw-bold text-uppercase small" style="color: #0F172A; letter-spacing: 0.5px;">
+                    <i class="fas fa-list me-2" style="color: #D4AF37;"></i>Registre des Achats
+                </span>
+                <span class="badge bg-light text-dark border font-monospace">
+                    Total : {{ achats|length }} enregistrement(s)
+                </span>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead style="background-color: #0F172A; color: #FFFFFF;">
+                            <tr>
+                                <th class="ps-4 py-3 text-uppercase fs-7" style="color: #D4AF37; font-size: 0.75rem;">Id</th>
+                                <th class="py-3 text-uppercase fs-7 text-center" style="font-size: 0.75rem;">Quantité</th>
+                                <th class="py-3 text-uppercase fs-7 text-end" style="font-size: 0.75rem;">Prix Unitaire</th>
+                                <th class="py-3 text-uppercase fs-7 text-center" style="font-size: 0.75rem;">CreatetAt</th>
+                                <th class="py-3 text-uppercase fs-7 text-center pe-4" style="font-size: 0.75rem;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for achat in achats %}
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <td class="ps-4 py-3 font-monospace fw-bold text-dark">
+                                    #{{ achat.id }}
+                                </td>
+                                <td class="py-3 text-center">
+                                    <span class="badge bg-light text-dark border px-3 py-2 font-monospace">
+                                        {{ achat.quantite }}
+                                    </span>
+                                </td>
+                                <td class="py-3 text-end font-monospace fw-bold" style="color: #0F172A;">
+                                    {{ achat.prix ? achat.prix|number_format(0, ',', ' ') ~ ' FCFA' : '-' }}
+                                </td>
+                                <td class="py-3 text-center text-secondary small">
+                                    <i class="far fa-calendar-alt me-1 text-muted"></i>
+                                    {{ achat.createtAt ? achat.createtAt|date('d/m/Y') : '' }}
+                                </td>
+                                <td class="py-3 text-center pe-4">
+                                    <div class="btn-group shadow-sm" role="group" style="border-radius: 6px; overflow: hidden;">
+                                        <a href="{{ path('app_achat_show', {'id': achat.id}) }}" class="btn btn-sm btn-light border-end" title="Afficher">
+                                            <i class="fas fa-eye text-primary me-1"></i><span class="d-none d-md-inline">show</span>
+                                        </a>
+                                        <a href="{{ path('app_achat_edit', {'id': achat.id}) }}" class="btn btn-sm btn-light" title="Modifier">
+                                            <i class="fas fa-edit text-warning me-1"></i><span class="d-none d-md-inline">edit</span>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5" style="background-color: #F8FAFC;">
+                                    <div class="py-4">
+                                        <div class="rounded-circle d-inline-flex p-4 mb-3" style="background-color: #F1F5F9;">
+                                            <i class="fas fa-box-open fa-3x" style="color: #D4AF37;"></i>
+                                        </div>
+                                        <h5 class="fw-bold text-dark mb-1">no records found</h5>
+                                        <p class="text-muted small mb-3">Aucune entrée d'achat n'a été enregistrée pour le moment.</p>
+                                        <a href="{{ path('app_achat_new') }}" class="btn btn-sm text-white fw-bold" style="background-color: #0F172A;">
+                                            <i class="fas fa-plus me-1"></i> Create new
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {# Pied de carte #}
+            <div class="card-footer bg-light py-3 px-4 d-flex justify-content-between align-items-center border-top">
+                <a href="{{ path('app_achat_new') }}" class="btn btn-sm btn-outline-dark">
+                    <i class="fas fa-plus me-1"></i> Create new
+                </a>
+                <span class="text-muted small">
+                    <i class="fas fa-database me-1"></i>Données d'approvisionnement
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

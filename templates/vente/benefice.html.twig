@@ -1,0 +1,170 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Rapport des Ventes & Bénéfices{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+<div class="min-vh-100 py-4 px-3 px-md-5" style="background-color: #F8FAFC;">
+    <div class="container-fluid max-w-6xl mx-auto">
+
+        {# En-tête de page Midnight Blue & Gold #}
+        <div class="card border-0 shadow-sm mb-4" style="border-radius: 16px; background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border-left: 6px solid #D4AF37 !important;">
+            <div class="card-body p-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                <div class="mb-3 mb-md-0">
+                    <h2 class="fw-bold text-white mb-1 d-flex align-items-center">
+                        <span class="badge rounded-circle p-2 me-3" style="background-color: rgba(212, 175, 55, 0.15); color: #D4AF37;">
+                            <i class="fas fa-chart-line fa-sm"></i>
+                        </span>
+                        Rapport des Ventes & Marges
+                    </h2>
+                    <p class="text-light text-opacity-75 small mb-0 ms-md-5">Analyse globale des ventes, prix d'achat, prix de vente et bénéfices dégagés.</p>
+                </div>
+                <div>
+                    <a href="{{ path('app_depense_index') }}" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                        <i class="fas fa-arrow-left me-1"></i> Retour aux dépenses
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        {# Calcul des Totaux en Twig pour la ligne de fin et les cartes KPI #}
+        {% set totalQuantite = 0 %}
+        {% set totalVentes = 0 %}
+        {% set totalAchats = 0 %}
+        {% set totalBenefice = 0 %}
+
+        {% for item in benefice %}
+            {% set totalQuantite = totalQuantite + item.quantite %}
+            {% set totalVentes = totalVentes + (item.prixVente * item.quantite) %}
+            {% set totalAchats = totalAchats + (item.prixAchat * item.quantite) %}
+            {% set totalBenefice = totalBenefice + item.benefice %}
+        {% endfor %}
+
+        {# Cartes KPI Synthese #}
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-3" style="border-radius: 12px; border-left: 4px solid #0F172A !important;">
+                    <div class="text-uppercase text-muted fw-semibold fs-7 mb-1" style="font-size: 0.75rem;">
+                        <i class="fas fa-shopping-cart me-1"></i> Total Ventes
+                    </div>
+                    <div class="fs-4 fw-bold font-monospace" style="color: #0F172A;">
+                        {{ totalVentes|number_format(0, ',', ' ') }} FCFA
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-3" style="border-radius: 12px; border-left: 4px solid #64748B !important;">
+                    <div class="text-uppercase text-muted fw-semibold fs-7 mb-1" style="font-size: 0.75rem;">
+                        <i class="fas fa-boxes me-1"></i> Total Achats
+                    </div>
+                    <div class="fs-4 fw-bold font-monospace text-secondary">
+                        {{ totalAchats|number_format(0, ',', ' ') }} FCFA
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm p-3" style="border-radius: 12px; border-left: 4px solid #059669 !important;">
+                    <div class="text-uppercase fw-semibold fs-7 mb-1 text-success" style="font-size: 0.75rem;">
+                        <i class="fas fa-coins me-1"></i> Bénéfice Net Global
+                    </div>
+                    <div class="fs-4 fw-bold font-monospace text-success">
+                        {{ totalBenefice >= 0 ? '+' : '' }}{{ totalBenefice|number_format(0, ',', ' ') }} FCFA
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Carte principale avec le Tableau des Marges #}
+        <div class="card shadow border-0 overflow-hidden" style="border-radius: 16px; background-color: #FFFFFF;">
+            
+            <div class="card-header bg-white py-3 px-4 d-flex justify-content-between align-items-center border-bottom">
+                <span class="fw-bold text-uppercase small" style="color: #0F172A; letter-spacing: 0.5px;">
+                    <i class="fas fa-list-alt me-2" style="color: #D4AF37;"></i>Registre Détaillé des Transactions
+                </span>
+                <span class="badge bg-light text-dark border font-monospace">
+                    {{ benefice|length }} enregistrement(s)
+                </span>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead style="background-color: #0F172A; color: #FFFFFF;">
+                            <tr>
+                                <th class="ps-4 py-3 text-uppercase" style="font-size: 0.75rem;">Produit</th>
+                                <th class="py-3 text-uppercase text-center" style="font-size: 0.75rem;">Quantité Vente</th>
+                                <th class="py-3 text-uppercase text-end" style="font-size: 0.75rem;">Prix Vente</th>
+                                <th class="py-3 text-uppercase text-end" style="font-size: 0.75rem;">Prix Achat</th>
+                                <th class="py-3 text-uppercase text-end fw-bold" style="color: #D4AF37; font-size: 0.75rem;">Bénéfice</th>
+                                <th class="py-3 text-uppercase text-center pe-4" style="font-size: 0.75rem;">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in benefice %}
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <td class="ps-4 py-3 font-weight-bold text-dark">
+                                    <i class="fas fa-box text-muted me-2"></i>{{ item.produit }}
+                                </td>
+                                <td class="py-3 text-center">
+                                    <span class="badge bg-light text-dark border px-3 py-2 font-monospace">
+                                        {{ item.quantite }}
+                                    </span>
+                                </td>
+                                <td class="py-3 text-end font-monospace">
+                                    {{ item.prixVente|number_format(0, ',', ' ') }} FCFA
+                                </td>
+                                <td class="py-3 text-end font-monospace text-muted">
+                                    {{ item.prixAchat|number_format(0, ',', ' ') }} FCFA
+                                </td>
+                                <td class="py-3 text-end font-monospace fw-bold">
+                                    <span class="badge {{ item.benefice >= 0 ? 'bg-success-subtle text-success border border-success' : 'bg-danger-subtle text-danger border border-danger' }} px-3 py-2">
+                                        {{ item.benefice >= 0 ? '+' : '' }}{{ item.benefice|number_format(0, ',', ' ') }} FCFA
+                                    </span>
+                                </td>
+                                <td class="py-3 text-center pe-4 text-secondary small">
+                                    <i class="far fa-calendar-alt me-1 text-muted"></i>
+                                    {{ item.date is defined and item.date ? item.date|date('d/m/Y') : 'N/A' }}
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5" style="background-color: #F8FAFC;">
+                                    <p class="text-muted mb-0">Aucun enregistrement trouvé.</p>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                        {% if benefice|length > 0 %}
+                        <tfoot class="table-light" style="border-top: 2px solid #0F172A;">
+                            <tr class="fw-bold">
+                                <td class="ps-4 py-3 text-uppercase" style="color: #0F172A;">Total Global</td>
+                                <td class="py-3 text-center">
+                                    <span class="badge text-white px-3 py-2 font-monospace" style="background-color: #0F172A;">
+                                        {{ totalQuantite }}
+                                    </span>
+                                </td>
+                                <td class="py-3 text-end font-monospace">{{ totalVentes|number_format(0, ',', ' ') }} FCFA</td>
+                                <td class="py-3 text-end font-monospace text-muted">{{ totalAchats|number_format(0, ',', ' ') }} FCFA</td>
+                                <td class="py-3 text-end font-monospace fs-6 text-success">
+                                    {{ totalBenefice >= 0 ? '+' : '' }}{{ totalBenefice|number_format(0, ',', ' ') }} FCFA
+                                </td>
+                                <td class="py-3 text-center pe-4 text-muted">-</td>
+                            </tr>
+                        </tfoot>
+                        {% endif %}
+                    </table>
+                </div>
+            </div>
+
+            <div class="card-footer bg-light py-3 px-4 d-flex justify-content-between align-items-center border-top">
+                <span class="text-muted small">
+                    <i class="fas fa-shield-alt me-1" style="color: #D4AF37;"></i>
+                    Document de synthèse financière - Généré automatiquement
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

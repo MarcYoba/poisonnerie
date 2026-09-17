@@ -1,0 +1,88 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+<div class="row g-3">
+    {# Employé #}
+    <div class="col-md-6">
+        {{ form_label(form.employee, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.employee) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.employee) }}
+        </div>
+    </div>
+
+    {# Statut du paiement #}
+    <div class="col-md-6">
+        {{ form_label(form.statut, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.statut) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.statut) }}
+        </div>
+    </div>
+
+    {# Période : Mois et Année #}
+    <div class="col-md-6">
+        {{ form_label(form.mois, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.mois) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.mois) }}
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        {{ form_label(form.annee, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.annee) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.annee) }}
+        </div>
+    </div>
+
+    <div class="col-12"><hr class="my-2 text-muted"></div>
+
+    {# Éléments financiers #}
+    <div class="col-md-4">
+        {{ form_label(form.montantDeBase, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        <div class="input-group">
+            {{ form_widget(form.montantDeBase) }}
+        </div>
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.montantDeBase) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {{ form_label(form.prime, null, {'label_attr': {'class': 'form-label font-weight-bold text-success'}}) }}
+        <div class="input-group">
+            {{ form_widget(form.prime) }}
+        </div>
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.prime) }}
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        {{ form_label(form.reductions, null, {'label_attr': {'class': 'form-label font-weight-bold text-danger'}}) }}
+        <div class="input-group">
+            {{ form_widget(form.reductions) }}
+        </div>
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.reductions) }}
+        </div>
+    </div>
+
+    {# Date d'effet du paiement #}
+    <div class="col-md-6">
+        {{ form_label(form.paidAt, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.paidAt) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.paidAt) }}
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 d-flex gap-2">
+    <button class="btn btn-primary px-4">
+        <i class="fas fa-save me-1"></i> {{ button_label|default('Enregistrer le salaire') }}
+    </button>
+</div>
+
+{{ form_end(form) }}

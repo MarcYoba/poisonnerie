@@ -1,0 +1,78 @@
+{{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
+
+<div class="row g-3">
+    {# Nom #}
+    <div class="col-md-6">
+        {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.nom) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.nom) }}
+        </div>
+    </div>
+
+    {# Téléphone #}
+    <div class="col-md-6">
+        {{ form_label(form.telephone, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.telephone) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.telephone) }}
+        </div>
+    </div>
+
+    {# N° Identification / CNI #}
+    <div class="col-md-6">
+        {{ form_label(form.identification, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.identification) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.identification) }}
+        </div>
+    </div>
+
+    {# Type de contrat #}
+    <div class="col-md-6">
+        {{ form_label(form.contrat, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.contrat) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.contrat) }}
+        </div>
+    </div>
+
+    {# Montant / Salaire #}
+    <div class="col-md-6">
+        {{ form_label(form.montant, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        <div class="input-group">
+            {{ form_widget(form.montant) }}
+        </div>
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.montant) }}
+        </div>
+    </div>
+
+    {# Date de création (si affichée dans le formulaire) #}
+    {% if form.createtAt is defined %}
+        <div class="col-md-6">
+            {{ form_label(form.createtAt, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+            {{ form_widget(form.createtAt) }}
+            <div class="text-danger small mt-1">
+                {{ form_errors(form.createtAt) }}
+            </div>
+        </div>
+    {% endif %}
+
+    {# Adresse #}
+    <div class="col-12">
+        {{ form_label(form.adresse, null, {'label_attr': {'class': 'form-label font-weight-bold'}}) }}
+        {{ form_widget(form.adresse) }}
+        <div class="text-danger small mt-1">
+            {{ form_errors(form.adresse) }}
+        </div>
+    </div>
+</div>
+
+<div class="mt-4 d-flex gap-2">
+    <button class="btn btn-primary px-4">
+        <i class="fas fa-save me-1"></i> {{ button_label|default('Enregistrer') }}
+    </button>
+</div>
+
+{{ form_end(form) }}

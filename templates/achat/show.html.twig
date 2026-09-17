@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Achat{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+<div class="min-vh-100 py-4 px-3 px-md-5" style="background-color: #F8FAFC;">
+    <div class="container-fluid max-w-5xl mx-auto">
+
+        {# Barre d'en-tête et actions #}
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <a href="{{ path('app_achat_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 mb-2">
+                    <i class="fas fa-arrow-left me-2"></i>back to list
+                </a>
+                <h2 class="fw-bold mb-0" style="color: #0F172A;">
+                    <i class="fas fa-shopping-bag me-2" style="color: #D4AF37;"></i>Achat
+                </h2>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ path('app_achat_edit', {'id': achat.id}) }}" class="btn btn-sm text-white fw-bold shadow-sm" style="background-color: #0F172A; border-left: 3px solid #D4AF37;">
+                    <i class="fas fa-edit me-2" style="color: #D4AF37;"></i>edit
+                </a>
+                {{ include('achat/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+        {# Carte de détails #}
+        <div class="card shadow border-0 overflow-hidden" style="border-radius: 16px; background-color: #FFFFFF;">
+            
+            {# En-tête Midnight Blue & Gold #}
+            <div class="card-header text-white p-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border-bottom: 4px solid #D4AF37;">
+                <div>
+                    <span class="badge bg-white bg-opacity-10 text-uppercase fs-7 mb-1" style="color: #D4AF37;">Fiche d'approvisionnement</span>
+                    <h4 class="fw-bold mb-0 text-white">Détails de l'Achat</h4>
+                </div>
+                <div class="text-end">
+                    <span class="text-light text-opacity-75 small d-block">ID Achat</span>
+                    <span class="font-monospace fw-bold" style="color: #D4AF37;">#{{ achat.id }}</span>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="width: 30%; background-color: #F8FAFC;">
+                                    <i class="fas fa-hashtag me-2 text-muted"></i>Id
+                                </th>
+                                <td class="ps-4 py-3 font-monospace fw-bold text-dark">
+                                    {{ achat.id }}
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="fas fa-sort-numeric-up me-2 text-muted"></i>Quantite
+                                </th>
+                                <td class="ps-4 py-3 font-monospace">
+                                    <span class="badge bg-light text-dark border px-3 py-2">
+                                        {{ achat.quantite }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="fas fa-tag me-2 text-muted"></i>Prix
+                                </th>
+                                <td class="ps-4 py-3 font-monospace fw-bold" style="color: #0F172A;">
+                                    {{ achat.prix ? achat.prix|number_format(0, ',', ' ') ~ ' FCFA' : '-' }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="far fa-calendar-alt me-2 text-muted"></i>CreatetAt
+                                </th>
+                                <td class="ps-4 py-3 text-dark">
+                                    {{ achat.createtAt ? achat.createtAt|date('Y-m-d') : '' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {# Pied de carte #}
+            <div class="card-footer bg-light py-3 px-4 d-flex justify-content-between align-items-center border-top">
+                <a href="{{ path('app_achat_index') }}" class="btn btn-sm btn-outline-dark">
+                    <i class="fas fa-list me-1"></i> back to list
+                </a>
+                <button onclick="window.print();" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-print me-1"></i> Imprimer
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

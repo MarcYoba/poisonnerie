@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Achat;
 use App\Entity\LigneVente;
 use App\Entity\Vente;
 use App\Form\VenteType;
@@ -52,6 +53,11 @@ final class VenteController extends AbstractController
             foreach ($lignesSoumises as $ligneVente) {
                 
                 // Option A : En utilisant la méthode de l'entité Vente (recommandé)
+                $quantite = $ligneVente->getQuantitePoids();
+                $produit = $ligneVente->getProduit();
+                $qtproduit = $produit->getQuantite();
+                $produit->setQuantite($qtproduit - $quantite);
+                $entityManager->persist($produit);
                 $vente->addLigneVente($ligneVente);
                 // Option B : Ou en la liant directement si vous n'utilisez pas addLigneVente
                 // $ligneVente->setVente($vente);
@@ -111,5 +117,31 @@ final class VenteController extends AbstractController
         }
 
         return $this->redirectToRoute('app_vente_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/benefice/{id}', name: 'app_vente_benefice', methods: ['GET'])]
+    public function benefice(Vente $vente, EntityManagerInterface $entityManager): Response
+    {
+        $lignesVente = $vente->getLigneVentes();
+
+        $benefice = [];
+        foreach ($lignesVente as $ligne) {
+            $produit = $ligne->getProduit();
+            $achat = $entityManager->getRepository(Achat::class)->findOneBy(['produit' => $produit], ['id' => 'DESC']);
+        $prixAchat = $achat?->getPrix() ?? 0;
+            $prixVente = $ligne->getPrixUnitaire()?? 0;
+            $quantite = $ligne->getQuantitePoids() ?? 0;
+            array_push($benefice, [
+                'produit' => $produit->getNomCommercial(),
+                'prixAchat' => $prixAchat,
+                'prixVente' => $prixVente,
+                'quantite' => $quantite,
+                'benefice' => ($prixVente - $prixAchat) * $quantite,
+            ]);
+        }
+        return $this->render('vente/benefice.html.twig', [
+            'vente' => $vente,
+            'benefice' => $benefice,
+        ]);
     }
 }

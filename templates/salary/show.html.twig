@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du Salaire{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0">
+                {# En-tête de la fiche #}
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 font-weight-bold">
+                        <i class="fas fa-file-invoice-dollar me-2"></i>Bulletin de paie : {{ salary.mois }} {{ salary.annee | date('Y') }}
+                    </h5>
+                    <a href="{{ path('app_salary_index') }}" class="btn btn-sm btn-outline-light">
+                        <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+                    </a>
+                </div>
+
+                {# Corps avec tableau structuré #}
+                <div class="card-body p-0">
+                    <table class="table table-striped align-middle mb-0">
+                        <tbody>
+                            <tr>
+                                <th scope="row" style="width: 35%;" class="ps-4">ID Fiche</th>
+                                <td class="font-weight-bold text-muted">#{{ salary.id }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Employé</th>
+                                <td class="font-weight-bold">
+                                    {% if salary.employee is defined and salary.employee is not null %}
+                                        <a href="{{ path('app_employee_show', {'id': salary.employee.id}) }}" class="text-decoration-none">
+                                            <i class="fas fa-user me-1 text-secondary"></i>{{ salary.employee.nom }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted">Non assigné</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Période de paie</th>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        {{ salary.mois }} {{ salary.annee | date('Y') }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Salaire de base</th>
+                                <td>{{ salary.montantDeBase ? salary.montantDeBase|number_format(0, ',', ' ') ~ ' XAF' : '0 XAF' }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Primes / Bonuses</th>
+                                <td class="text-success font-weight-bold">
+                                    + {{ salary.prime ? salary.prime|number_format(0, ',', ' ') ~ ' XAF' : '0 XAF' }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Réductions / Avances</th>
+                                <td class="text-danger font-weight-bold">
+                                    - {{ salary.reductions ? salary.reductions|number_format(0, ',', ' ') ~ ' XAF' : '0 XAF' }}
+                                </td>
+                            </tr>
+                            <tr class="table-primary">
+                                <th scope="row" class="ps-4 fs-6 text-primary">Net à Payer</th>
+                                <td class="font-weight-bold fs-5 text-primary">
+                                    {{ salary.netApayer ? salary.netApayer|number_format(0, ',', ' ') ~ ' XAF' : '0 XAF' }}
+                                </td>
+                            </tr>
+                            {% if salary.statut is defined %}
+                                <tr>
+                                    <th scope="row" class="ps-4">Statut</th>
+                                    <td>
+                                        {% if salary.statut == 'PAYE' %}
+                                            <span class="badge bg-success">Payé</span>
+                                        {% elseif salary.statut == 'EN_ATTENTE' %}
+                                            <span class="badge bg-warning text-dark">En attente</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">{{ salary.statut }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Actions bas de page #}
+                <div class="card-footer bg-light p-3 d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_salary_edit', {'id': salary.id}) }}" class="btn btn-primary">
+                        <i class="fas fa-edit me-1"></i> Modifier
+                    </a>
+
+                    <div>
+                        {{ include('salary/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

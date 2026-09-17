@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Employés{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+<div class="container-fluid mt-4 px-4">
+    <div class="card shadow-sm border-0">
+        {# En-tête du tableau #}
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 font-weight-bold">
+                <i class="fas fa-users me-2"></i>Liste des Employés
+            </h5>
+            <a href="{{ path('app_employee_new') }}" class="btn btn-light btn-sm text-primary font-weight-bold">
+                <i class="fas fa-user-plus me-1"></i> Nouveau employé
+            </a>
+        </div>
+
+        {# Corps du tableau #}
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="text-center" style="width: 50px;">ID</th>
+                            <th scope="col">Nom & Prénom</th>
+                            <th scope="col">Téléphone</th>
+                            <th scope="col">N° CNI / Ident.</th>
+                            <th scope="col">Adresse</th>
+                            <th scope="col" class="text-center">Contrat</th>
+                            <th scope="col" class="text-end">Montant</th>
+                            <th scope="col" class="text-center">Créé le</th>
+                            <th scope="col" class="text-center" style="width: 150px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for employee in employees %}
+                        <tr>
+                            <td class="text-center font-weight-bold text-muted">{{ employee.id }}</td>
+                            <td class="font-weight-bold">{{ employee.nom }}</td>
+                            <td>
+                                {% if employee.telephone %}
+                                    <a href="tel:{{ employee.telephone }}" class="text-decoration-none text-dark">
+                                        <i class="fas fa-phone-alt text-muted me-1 small"></i>{{ employee.telephone }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted small">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    {{ employee.identification|default('N/A') }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="text-truncate d-inline-block" style="max-width: 180px;" title="{{ employee.adresse }}">
+                                    {{ employee.adresse|default('-') }}
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                {% if employee.contrat == 'CDI' %}
+                                    <span class="badge bg-success">CDI</span>
+                                {% elseif employee.contrat == 'CDD' %}
+                                    <span class="badge bg-info text-dark">CDD</span>
+                                {% elseif employee.contrat == 'STAGE' %}
+                                    <span class="badge bg-warning text-dark">Stage</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ employee.contrat|default('Non spécifié') }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end font-weight-bold text-primary">
+                                {{ employee.montant ? employee.montant|number_format(0, ',', ' ') ~ ' XAF' : '-' }}
+                            </td>
+                            <td class="text-center text-muted small">
+                                {{ employee.createtAt ? employee.createtAt|date('d/m/Y') : '-' }}
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{{ path('app_employee_show', {'id': employee.id}) }}" class="btn btn-outline-info" title="Voir les détails">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_employee_edit', {'id': employee.id}) }}" class="btn btn-outline-primary" title="Modifier">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center py-4 text-muted">
+                                <i class="fas fa-info-circle fa-2x mb-2 d-block text-secondary"></i>
+                                Aucun employé trouvé pour le moment.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

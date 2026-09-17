@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Salaires{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+<div class="container-fluid mt-4 px-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+            <h5 class="mb-0 font-weight-bold">
+                <i class="fas fa-file-invoice-dollar me-2"></i>Historique des Salaires
+            </h5>
+            <a href="{{ path('app_salary_new') }}" class="btn btn-light btn-sm text-primary font-weight-bold">
+                <i class="fas fa-plus me-1"></i> Enregistrer un salaire
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="text-center">ID</th>
+                            <th scope="col">Employé</th>
+                            <th scope="col" class="text-center">Période</th>
+                            <th scope="col" class="text-end">Base</th>
+                            <th scope="col" class="text-end">Primes</th>
+                            <th scope="col" class="text-end">Retenues</th>
+                            <th scope="col" class="text-end">Net à Payer</th>
+                            <th scope="col" class="text-center">Statut</th>
+                            <th scope="col" class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for salary in salaries %}
+                        <tr>
+                            <td class="text-center font-weight-bold text-muted">{{ salary.id }}</td>
+                            <td class="font-weight-bold">{{ salary.employee.nom }}</td>
+                            <td class="text-center">{{ salary.mois }} {{ salary.annee | date('Y') }}</td>
+                            <td class="text-end">{{ salary.montantDeBase|number_format(0, ',', ' ') }} XAF</td>
+                            <td class="text-end text-success">+{{ salary.prime|default(0)|number_format(0, ',', ' ') }}</td>
+                            <td class="text-end text-danger">-{{ salary.reductions|default(0)|number_format(0, ',', ' ') }}</td>
+                            <td class="text-end font-weight-bold text-primary">
+                                {{ salary.netApayer|number_format(0, ',', ' ') }} XAF
+                            </td>
+                            <td class="text-center">
+                                {% if salary.statut == 'PAYE' %}
+                                    <span class="badge bg-success">Payé</span>
+                                {% elseif salary.statut == 'EN_ATTENTE' %}
+                                    <span class="badge bg-warning text-dark">En attente</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">{{ salary.statut }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{{ path('app_salary_show', {'id': salary.id}) }}" class="btn btn-outline-info">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('app_salary_edit', {'id': salary.id}) }}" class="btn btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="9" class="text-center py-4 text-muted">
+                                Aucun enregistrement de salaire disponible.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

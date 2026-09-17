@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'employé{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-9">
+            <div class="card shadow-sm border-0">
+                {# En-tête de la carte #}
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 font-weight-bold">
+                        <i class="fas fa-id-card me-2"></i>Fiche de l'employé : {{ employee.nom }}
+                    </h5>
+                    <a href="{{ path('app_employee_list') }}" class="btn btn-sm btn-outline-light">
+                        <i class="fas fa-arrow-left me-1"></i> Retour à la liste
+                    </a>
+                </div>
+
+                {# Corps avec le tableau d'informations #}
+                <div class="card-body p-0">
+                    <table class="table table-striped align-middle mb-0">
+                        <tbody>
+                            <tr>
+                                <th scope="row" style="width: 30%;" class="ps-4">ID</th>
+                                <td class="font-weight-bold text-muted">{{ employee.id }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Nom & Prénom</th>
+                                <td class="font-weight-bold">{{ employee.nom }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Téléphone</th>
+                                <td>
+                                    {% if employee.telephone %}
+                                        <a href="tel:{{ employee.telephone }}" class="text-decoration-none">
+                                            <i class="fas fa-phone-alt me-1 text-muted"></i>{{ employee.telephone }}
+                                        </a>
+                                    {% else %}
+                                        <span class="text-muted small">Non renseigné</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">N° CNI / Identification</th>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        {{ employee.identification|default('Non renseigné') }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Adresse / Résidence</th>
+                                <td>{{ employee.adresse|default('Non renseignée') }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Type de contrat</th>
+                                <td>
+                                    {% if employee.contrat == 'CDI' %}
+                                        <span class="badge bg-success">CDI</span>
+                                    {% elseif employee.contrat == 'CDD' %}
+                                        <span class="badge bg-info text-dark">CDD</span>
+                                    {% elseif employee.contrat == 'STAGE' %}
+                                        <span class="badge bg-warning text-dark">Stage</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ employee.contrat|default('Non spécifié') }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Montant / Salaire</th>
+                                <td class="font-weight-bold text-primary">
+                                    {{ employee.montant ? employee.montant|number_format(0, ',', ' ') ~ ' XAF' : 'Non renseigné' }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="ps-4">Date d'enregistrement</th>
+                                <td class="text-muted">
+                                    {{ employee.createtAt ? employee.createtAt|date('d/m/Y à H:i') : '-' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                {# Pied de carte avec boutons d'action #}
+                <div class="card-footer bg-light p-3 d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_employee_edit', {'id': employee.id}) }}" class="btn btn-primary">
+                        <i class="fas fa-edit me-1"></i> Modifier
+                    </a>
+
+                    <div>
+                        {{ include('employee/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

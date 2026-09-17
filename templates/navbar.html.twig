@@ -66,11 +66,15 @@
         {# ==================== IMPAYÉS ==================== #}
         <li class="nav-item dropdown mega-dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdownImpayes" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-exclamation-triangle me-1"></i> fonctionalite 4
+            <i class="fas fa-exclamation-triangle me-1"></i> Achat &amp; Produit
           </a>
           <div class="dropdown-menu mega-menu p-3" aria-labelledby="dropdownImpayes" style="min-width: 20rem;">
             <div class="row g-4">
-              
+              <div class="col-12">
+                <h6 class="dropdown-header"><i class="fas fa-users me-1"></i> Achat</h6>
+                <a class="dropdown-item" href="{{ path('app_achat_new') }}">Créer une Achat</a>
+                <a class="dropdown-item" href="{{ path('app_achat_index') }}">Liste des Achats</a>
+              </div>
             </div>
           </div>
         </li>
@@ -78,19 +82,23 @@
         {# ==================== AGRICULTURE ==================== #}
         <li class="nav-item dropdown mega-dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdownAgriculture" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-seedling me-1"></i> fonctionalite 5
+            <i class="fas fa-seedling me-1"></i> Depense &amp; Type de depense
           </a>
           <div class="dropdown-menu mega-menu p-3" aria-labelledby="dropdownAgriculture" style="min-width: 32rem;">
             <div class="row g-4">
               
-              
+              <div class="col-12">
+                <h6 class="dropdown-header"><i class="fas fa-users me-1"></i> Depenses</h6>
+                <a class="dropdown-item" href="{{ path('app_depense_new') }}">Créer une Dépense</a>
+                <a class="dropdown-item" href="{{ path('app_depense_index') }}">Liste des Dépenses</a>
+              </div>
               
             </div>
           </div>
         </li>
 
         {# ==================== ÉLEVAGE ==================== #}
-        <li class="nav-item dropdown mega-dropdown">
+        {# <li class="nav-item dropdown mega-dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdownElevage" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fas fa-egg me-1"></i> fonctionalite 6
           </a>
@@ -102,7 +110,7 @@
               </div>
             </div>
           </div>
-        </li>
+        </li> #}
 
         {# ==================== Employés ==================== #}
         <li class="nav-item dropdown mega-dropdown">
@@ -113,18 +121,20 @@
             <div class="row g-4">
               <div class="col-12">
                 <h6 class="dropdown-header"><i class="fas fa-users me-1"></i>Employés</h6>
-                
+                <a class="dropdown-item" href="{{ path('app_employee_new') }}">Ajouter Employés</a>
+                <a class="dropdown-item" href="{{ path('app_employee_list') }}">Liste Employés</a>
               </div>
               <div class="col-12">
                 <h6 class="dropdown-header"><i class="fas fa-users me-1"></i>Salaire</h6>
-                
+                <a class="dropdown-item" href="{{ path('app_salary_new') }}">Ajouter Salaire</a>
+                <a class="dropdown-item" href="{{ path('app_salary_index') }}">Liste Salaires</a>
               </div>
             </div>
           </div>
         </li>
 
         {# ==================== STATISTIQUES ==================== #}
-        <li class="nav-item dropdown mega-dropdown">
+        {# <li class="nav-item dropdown mega-dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdownStats" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="fas fa-chart-line me-1"></i> Statistiques
           </a>
@@ -133,7 +143,7 @@
               
             </div>
           </div>
-        </li>
+        </li> #}
 
         {% if "ROLE_ADMIN" in app.user.roles %}
         {# ==================== ADMINISTRATION ==================== #}

@@ -1,0 +1,7 @@
+<form method="post" action="{{ path('app_achat_delete', {'id': achat.id}) }}" onsubmit="return confirm('Are you sure you want to delete this item?');" class="d-inline">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ achat.id) }}">
+    <button class="btn btn-sm btn-outline-danger shadow-sm px-3 py-1 fw-semibold d-inline-flex align-items-center gap-1 rounded-2" type="submit">
+        <i class="fas fa-trash-alt fa-xs"></i>
+        <span>Delete</span>
+    </button>
+</form>
