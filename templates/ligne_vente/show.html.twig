@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LigneVente{% endblock %}
+
+{% block body %}
+    <h1>LigneVente</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ligne_vente.id }}</td>
+            </tr>
+            <tr>
+                <th>QuentitePoids</th>
+                <td>{{ ligne_vente.quentitePoids }}</td>
+            </tr>
+            <tr>
+                <th>PrixUnitaire</th>
+                <td>{{ ligne_vente.prixUnitaire }}</td>
+            </tr>
+            <tr>
+                <th>SousTotalHt</th>
+                <td>{{ ligne_vente.sousTotalHt }}</td>
+            </tr>
+            <tr>
+                <th>SousTotalTtc</th>
+                <td>{{ ligne_vente.sousTotalTtc }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ligne_vente_index') }}">back to list</a>
+
+    <a href="{{ path('app_ligne_vente_edit', {'id': ligne_vente.id}) }}">edit</a>
+
+    {{ include('ligne_vente/_delete_form.html.twig') }}
+{% endblock %}

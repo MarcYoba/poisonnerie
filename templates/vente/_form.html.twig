@@ -1,0 +1,193 @@
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{{ form_start(form) }}
+    <div class="row g-4">
+        {# --- SECTION 1 : INFORMATIONS DE FACTURATION ET CLIENT --- #}
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0">
+                    <h2 class="h5 mb-0 fw-bold text-primary">
+                        <i class="fas fa-file-invoice me-2"></i>Facturation & Client
+                    </h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        {{ form_row(form.numeroFacture) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_row(form.createtAt) }}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_row(form.statuspaiement) }}
+                    </div>
+
+                    <hr class="my-3 text-muted">
+
+                    <div class="mb-3">
+                        {# <div class="col-md-6 mb-3"> #}
+                            {{ form_row(form.remise, {'attr': {'class': 'input-calcul-total'}}) }}
+                        {# </div> #}
+                    </div>
+                    <div class="mb-3">
+                        {# <div class="col-md-6 mb-3"> #}
+                            {{ form_row(form.montantTotalHt, {'attr': {'readonly': true, 'class': 'bg-light text-end fw-bold'}}) }}
+                        {# </div> #}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# --- SECTION 2 : SELECTION ET PESEE DE PRODUITS --- #}
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                    <h2 class="h5 mb-0 fw-bold text-dark">
+                        <i class="fas fa-fish me-2 text-primary"></i>Produits & Pesée
+                    </h2>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="btn-ajouter-ligne">
+                        <i class="fas fa-plus me-1"></i>Ajouter un article
+                    </button>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0" id="table-lignes-vente">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 35%;">Produit / Poisson</th>
+                                    <th style="width: 25%;">Poids (Kg)</th>
+                                    <th style="width: 20%;">Prix U. (FCFA)</th>
+                                    <th style="width: 15%;" class="text-end">Total (FCFA)</th>
+                                    <th style="width: 5%;" class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            {# Injection du prototype Symfony CollectionType #}
+                            <tbody id="zone-lignes-produits" 
+                                   data-prototype="{{ include('vente/_ligne_produit_prototype.html.twig', {'form': form.lignes.vars.prototype})|e('html_attr') }}"
+                                   data-index="{{ form.lignes|length }}">
+                                
+                                {% for ligne in form.lignes %}
+                                    {% include 'vente/_ligne_produit_prototype.html.twig' with {'form': ligne} %}
+                                {% endfor %}
+                            </tbody>
+                            <tfoot class="table-light border-top">
+                                <tr>
+                                    <td colspan="3" class="text-end fw-bold">Montant Total Brut :</td>
+                                    <td class="text-end fw-bold" id="affichage-total-brut">0 FCFA</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Rendu automatique des champs masqués (ex: CSRF Token) #}
+    {{ form_rest(form) }}
+
+    {# --- BARRE D'ACTIONS --- #}
+    <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-4">
+        <a href="#" class="btn btn-light border">
+            <i class="fas fa-times me-1"></i>Annuler
+        </a>
+        <button type="submit" class="btn btn-success px-4 fw-bold">
+            <i class="fas fa-check-circle me-1"></i>{{ button_label|default('Enregistrer et Valider la Vente') }}
+        </button>
+    </div>
+{{ form_end(form) }}
+
+{# --- SCRIPT VANILLA JS POUR LA DYNAMIQUE DU FORMULAIRE --- #}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('zone-lignes-produits');
+    const btnAjouter = document.getElementById('btn-ajouter-ligne');
+    const inputTotalHt = document.querySelector('[name$="[montantTotalHt]"]');
+    const inputRemise = document.querySelector('[name$="[remise]"]');
+    const affichageTotalBrut = document.getElementById('affichage-total-brut');
+
+    // Mettre à jour les calculs d'une ligne
+    function recalculerLigne(row) {
+        const inputPoids = row.querySelector('.input-poids');
+        const inputPrix = row.querySelector('.input-prix');
+        const cellTotal = row.querySelector('.total-ligne');
+
+        if (inputPoids && inputPrix && cellTotal) {
+            const poids = parseFloat(inputPoids.value) || 0;
+            const prix = parseFloat(inputPrix.value) || 0;
+            const total = poids * prix;
+            cellTotal.textContent = total.toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA';
+            recalculerTotalGeneral();
+        }
+    }
+
+    // Mettre à jour les totaux généraux (HT et Remise)
+    function recalculerTotalGeneral() {
+        let totalBrut = 0;
+        document.querySelectorAll('.ligne-produit-item').forEach(row => {
+            const inputPoids = row.querySelector('.input-poids');
+            const inputPrix = row.querySelector('.input-prix');
+            const poids = parseFloat(inputPoids?.value) || 0;
+            const prix = parseFloat(inputPrix?.value) || 0;
+            totalBrut += (poids * prix);
+        });
+
+        const remise = parseFloat(inputRemise?.value) || 0;
+        const totalNet = Math.max(0, totalBrut - remise);
+
+        if (affichageTotalBrut) {
+            affichageTotalBrut.textContent = totalBrut.toLocaleString('fr-FR') + ' FCFA';
+        }
+        if (inputTotalHt) {
+            inputTotalHt.value = totalNet;
+        }
+    }
+
+    // Ajouter une nouvelle ligne via le prototype Symfony
+    function ajouterLigne() {
+        let index = parseInt(container.dataset.index);
+        let prototype = container.dataset.prototype;
+        let newForm = prototype.replace(/__name__/g, index);
+        
+        container.dataset.index = index + 1;
+        
+        const tempContainer = document.createElement('tbody');
+        tempContainer.innerHTML = newForm;
+        const newRow = tempContainer.firstElementChild;
+
+        container.appendChild(newRow);
+        attacherEvenementsLigne(newRow);
+    }
+
+    // Attacher les écouteurs d'événements aux champs de la ligne
+    function attacherEvenementsLigne(row) {
+        row.querySelectorAll('.input-poids, .input-prix').forEach(input => {
+            input.addEventListener('input', () => recalculerLigne(row));
+        });
+
+        const btnSupprimer = row.querySelector('.btn-supprimer-ligne');
+        if (btnSupprimer) {
+            btnSupprimer.addEventListener('click', () => {
+                row.remove();
+                recalculerTotalGeneral();
+            });
+        }
+    }
+
+    // Événement bouton ajouter
+    btnAjouter.addEventListener('click', ajouterLigne);
+
+    // Événement changement de remise
+    if (inputRemise) {
+        inputRemise.addEventListener('input', recalculerTotalGeneral);
+    }
+
+    // Initialisation des lignes existantes
+    document.querySelectorAll('.ligne-produit-item').forEach(row => {
+        attacherEvenementsLigne(row);
+        recalculerLigne(row);
+    });
+});
+</script>

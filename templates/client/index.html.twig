@@ -1,0 +1,132 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Clients{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+
+<div class="container py-4">
+    {# Fil d'Ariane #}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_client_index') }}" class="text-decoration-none fw-bold" style="color: #0F172A;">
+                    <i class="fas fa-users me-1" style="color: #D4AF37;"></i>Gestion Clients
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Répertoire Général</li>
+        </ol>
+    </nav>
+
+    <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+        {# En-tête du tableau #}
+        <div class="card-header py-3 border-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3" style="background-color: #0F172A; border-bottom: 3px solid #D4AF37 !important;">
+            <div>
+                <span class="badge mb-1 text-uppercase" style="background-color: #D4AF37; color: #0F172A;">Base Clients</span>
+                <h1 class="h4 mb-0 fw-bold text-white d-flex align-items-center">
+                    <i class="fas fa-address-book me-2" style="color: #D4AF37;"></i>Répertoire des Clients
+                </h1>
+                <p class="text-white-50 small mb-0 mt-1">
+                    Consultez, recherchez et gérez les fiches clients et leurs soldes crédits.
+                </p>
+            </div>
+            <a href="{{ path('app_client_new') }}" class="btn btn-sm text-white fw-bold d-inline-flex align-items-center shadow-sm" style="background-color: #D4AF37; color: #0F172A !important;">
+                <i class="fas fa-user-plus me-2"></i>Nouveau Client
+            </a>
+        </div>
+
+        {# Corps de la Carte / Tableau #}
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="text-uppercase small text-muted" style="background-color: #F8FAFC;">
+                        <tr>
+                            <th class="py-3 ps-4" style="width: 80px;">ID</th>
+                            <th class="py-3">Nom / Raison Sociale</th>
+                            <th class="py-3">Contact</th>
+                            <th class="py-3">Type</th>
+                            <th class="py-3">Solde Crédit</th>
+                            <th class="py-3">Date Création</th>
+                            <th class="py-3 text-end pe-4" style="width: 140px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for client in clients %}
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted">#{{ client.id }}</td>
+                            <td>
+                                <div class="fw-bold" style="color: #0F172A;">{{ client.nom }}</div>
+                                {% if client.email %}
+                                    <small class="text-muted"><i class="fas fa-envelope me-1" style="color: #D4AF37;"></i>{{ client.email }}</small>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if client.telephone %}
+                                    <a href="tel:{{ client.telephone }}" class="text-decoration-none text-dark small fw-semibold">
+                                        <i class="fas fa-phone me-1 text-muted"></i>{{ client.telephone }}
+                                    </a>
+                                {% else %}
+                                    <span class="text-muted small fst-italic">Non renseigné</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge px-2 py-1 text-uppercase" style="background-color: #0F172A; color: #D4AF37; font-size: 0.75rem;">
+                                    {{ client.typeClient|default('Standard') }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if client.soldeCredit is defined and client.soldeCredit > 0 %}
+                                    <span class="fw-bold text-danger">
+                                        {{ client.soldeCredit|number_format(0, ',', ' ') }} FCFA
+                                    </span>
+                                {% else %}
+                                    <span class="fw-bold text-success">
+                                        {{ client.soldeCredit ? client.soldeCredit|number_format(0, ',', ' ') ~ ' FCFA' : '0 FCFA' }}
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="small text-muted">
+                                {{ client.createtAt ? client.createtAt|date('d/m/Y') : '-' }}
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="{{ path('app_client_show', {'id': client.id}) }}" class="btn btn-outline-secondary" title="Consulter">
+                                        <i class="fas fa-eye"></i>Detail
+                                    </a>
+                                    <a href="{{ path('app_client_edit', {'id': client.id}) }}" class="btn btn-outline-warning text-dark" title="Modifier">
+                                        <i class="fas fa-edit"></i>Editer
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fas fa-users-slash fa-3x mb-3" style="color: #D4AF37;"></i>
+                                    <h5 class="fw-bold text-dark">Aucun client enregistré</h5>
+                                    <p class="small mb-3">Votre registre client est actuellement vide.</p>
+                                    <a href="{{ path('app_client_new') }}" class="btn btn-sm text-white fw-bold" style="background-color: #0F172A;">
+                                        <i class="fas fa-plus me-1" style="color: #D4AF37;"></i>Ajouter le premier client
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Pied de Carte #}
+        <div class="card-footer bg-light p-3 border-0 d-flex justify-content-between align-items-center">
+            <span class="text-muted small">
+                Total : <strong>{{ clients|length }}</strong> client(s) répertorié(s)
+            </span>
+            <a href="{{ path('app_client_new') }}" class="btn btn-sm btn-outline-dark">
+                <i class="fas fa-plus me-1" style="color: #D4AF37;"></i>Nouveau Client
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

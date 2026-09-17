@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Vente - Provenderie Douala{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+
+{# Container global avec fond teinté pour casser le blanc uniforme #}
+<div class="container-fluid px-4 py-4" style="background-color: #F8FAFC; min-height: calc(100vh - 56px);">
+    
+    {# --- FIL D'ARIANE (BREADCRUMB) --- #}
+    <div class="row justify-content-center mb-3">
+        <div class="col-lg-10 col-xl-8">
+            <nav aria-label="breadcrumb" class="bg-white px-3 py-2 rounded-3 shadow-sm border" style="border-color: #E2E8F0;">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('app_vente_index') }}" class="text-decoration-none fw-bold d-inline-flex align-items-center" style="color: #0F172A;">
+                            <i class="fas fa-shopping-cart me-2" style="color: #92771E;"></i>Gestion des Ventes
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active text-secondary" aria-current="page">Enregistrer une Vente</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    {# --- GRILLE ET CARTE DU FORMULAIRE --- #}
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-8">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                
+                {# --- EN-TÊTE COLORÉE (HERO HEADER) --- #}
+                <div class="card-header p-4 border-0 text-white" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border-bottom: 4px solid #D4AF37 !important;">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 48px; height: 48px; background-color: rgba(212, 175, 55, 0.15); border: 1px solid #D4AF37;">
+                                <i class="fas fa-cart-plus fa-lg" style="color: #D4AF37;"></i>
+                            </div>
+                            <div>
+                                <h1 class="h4 mb-1 fw-bold text-white">Nouvelle Vente</h1>
+                                <p class="small mb-0 text-white-50">Renseignez les détails de la commande et validez l'enregistrement.</p>
+                            </div>
+                        </div>
+                        <span class="badge rounded-pill bg-dark border border-secondary text-light px-3 py-2 d-none d-md-inline-block">
+                            <i class="fas fa-store me-1" style="color: #D4AF37;"></i> Provenderie Douala
+                        </span>
+                    </div>
+                </div>
+
+                {# --- CORPS DU FORMULAIRE --- #}
+                <div class="card-body p-4 bg-white">
+                    {{ include('vente/_form.html.twig') }}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail Produit - {{ produit.nomCommercial }}{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+
+<div class="container py-4">
+    {# Fil d'Ariane #}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_produit_index') }}" class="text-decoration-none fw-bold" style="color: #0F172A;">
+                    <i class="fas fa-boxes me-1" style="color: #D4AF37;"></i>Catalogue Produit
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ produit.nomCommercial }}</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                
+                {# En-tête de carte #}
+                <div class="card-header py-3 border-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3" style="background-color: #0F172A; border-bottom: 3px solid #D4AF37 !important;">
+                    <div>
+                        <span class="badge mb-1 text-uppercase" style="background-color: #D4AF37; color: #0F172A;">Fiche Produit #{{ produit.id }}</span>
+                        <h1 class="h4 mb-0 fw-bold text-white">
+                            {{ produit.nomCommercial }}
+                        </h1>
+                        {% if produit.nomScientifique %}
+                            <p class="text-white-50 small fst-italic mb-0 mt-1">
+                                {{ produit.nomScientifique }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_produit_index') }}" class="btn btn-sm btn-outline-light border-0">
+                            <i class="fas fa-arrow-left me-1" style="color: #D4AF37;"></i>Retour
+                        </a>
+                        <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-sm text-white font-weight-bold" style="background-color: #D4AF37; color: #0F172A !important;">
+                            <i class="fas fa-edit me-1"></i>Modifier
+                        </a>
+                    </div>
+                </div>
+
+                {# Corps de la carte / Grille de caractéristiques #}
+                <div class="card-body p-4 bg-white">
+                    <div class="row g-4 mb-4">
+                        
+                        {# Bloc Prix Unitaire #}
+                        <div class="col-12 col-md-4">
+                            <div class="p-3 rounded-3 border bg-light h-100 border-start border-4" style="border-left-color: #0F172A !important;">
+                                <small class="text-uppercase fw-bold text-muted d-block mb-1">Prix Unitaire</small>
+                                <span class="h4 fw-bold mb-0" style="color: #0F172A;">
+                                    {{ produit.prix ? produit.prix|number_format(0, ',', ' ') ~ ' FCFA' : '0 FCFA' }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {# Bloc Quantité en Stock #}
+                        <div class="col-12 col-md-4">
+                            <div class="p-3 rounded-3 border bg-light h-100 border-start border-4" style="border-left-color: #D4AF37 !important;">
+                                <small class="text-uppercase fw-bold text-muted d-block mb-1">Quantité en Stock</small>
+                                {% if produit.quantite is defined and produit.quantite is not null %}
+                                    {% if produit.quantite <= 5 %}
+                                        <span class="badge bg-danger text-white rounded-pill fs-6 px-3 py-1">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ produit.quantite }} (Stock Critique)
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill fs-6 px-3 py-1">
+                                            {{ produit.quantite }} en stock
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">Non renseigné</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Bloc Unité de Mesure #}
+                        <div class="col-12 col-md-4">
+                            <div class="p-3 rounded-3 border bg-light h-100 border-start border-4" style="border-left-color: #0F172A !important;">
+                                <small class="text-uppercase fw-bold text-muted d-block mb-1">Unité de Conditionnement</small>
+                                <span class="h5 fw-bold mb-0 text-dark">
+                                    <i class="fas fa-box me-2" style="color: #D4AF37;"></i>{{ produit.unite|default('N/A') }}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {# Tableau récapitulatif détaillé #}
+                    <div class="table-responsive rounded-3 border mb-4">
+                        <table class="table table-striped align-middle mb-0">
+                            <tbody>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4" style="width: 30%;">Identifiant système (ID)</th>
+                                    <td class="fw-bold ps-4">#{{ produit.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Nom Commercial / Désignation</th>
+                                    <td class="fw-bold text-dark ps-4" style="color: #0F172A !important;">{{ produit.nomCommercial }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Nom Scientifique / Variété</th>
+                                    <td class="fst-italic text-muted ps-4">{{ produit.nomScientifique|default('Non renseigné') }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Conditionnement / Unité</th>
+                                    <td class="ps-4">{{ produit.unite|default('N/A') }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Prix de Vente</th>
+                                    <td class="fw-bold ps-4" style="color: #0F172A;">{{ produit.prix ? produit.prix|number_format(0, ',', ' ') ~ ' FCFA' : '0 FCFA' }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Niveau de Stock</th>
+                                    <td class="ps-4">{{ produit.quantite|default(0) }} unité(s)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {# Zone d'actions inférieures #}
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top" style="border-color: #E2E8F0 !important;">
+                        <a href="{{ path('app_produit_index') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-list me-1"></i>Retour au catalogue
+                        </a>
+
+                        <div class="d-flex gap-2 align-items-center">
+                            <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-sm btn-outline-warning text-dark fw-bold">
+                                <i class="fas fa-edit me-1"></i>Modifier
+                            </a>
+                            {{ include('produit/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+
+                </div>
+
+                {# Pied de carte #}
+                <div class="card-footer bg-light p-3 text-center border-0 text-muted small">
+                    <i class="fas fa-shield-alt me-1 text-primary"></i> Fiche enregistrée et sécurisée dans la base de données
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LigneVente index{% endblock %}
+
+{% block body %}
+    <h1>LigneVente index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>QuentitePoids</th>
+                <th>PrixUnitaire</th>
+                <th>SousTotalHt</th>
+                <th>SousTotalTtc</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ligne_vente in ligne_ventes %}
+            <tr>
+                <td>{{ ligne_vente.id }}</td>
+                <td>{{ ligne_vente.quantitePoids }}</td>
+                <td>{{ ligne_vente.prixUnitaire }}</td>
+                <td>{{ ligne_vente.sousTotalHt }}</td>
+                <td>{{ ligne_vente.sousTotalTtc }}</td>
+                <td>
+                    <a href="{{ path('app_ligne_vente_show', {'id': ligne_vente.id}) }}">show</a>
+                    <a href="{{ path('app_ligne_vente_edit', {'id': ligne_vente.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ligne_vente_new') }}">Create new</a>
+{% endblock %}

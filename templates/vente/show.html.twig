@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Vente - {{ vente.numeroFacture }}{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+<div class="min-vh-100 py-4 px-3 px-md-5" style="background-color: #F8FAFC;">
+    <div class="container-fluid max-w-5xl mx-auto">
+
+        {# Barre d'en-tête et actions #}
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+            <div>
+                <a href="{{ path('app_vente_index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3 mb-2">
+                    <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                </a>
+                <h2 class="fw-bold mb-0" style="color: #0F172A;">
+                    <i class="fas fa-file-invoice me-2" style="color: #D4AF37;"></i>Détails Vente
+                </h2>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ path('app_vente_edit', {'id': vente.id}) }}" class="btn btn-sm text-white fw-bold shadow-sm" style="background-color: #0F172A; border-left: 3px solid #D4AF37;">
+                    <i class="fas fa-edit me-2" style="color: #D4AF37;"></i>Modifier
+                </a>
+                {{ include('vente/_delete_form.html.twig') }}
+            </div>
+        </div>
+
+        {# Carte de détails style Facture / Reçu #}
+        <div class="card shadow border-0 overflow-hidden" style="border-radius: 16px; background-color: #FFFFFF;">
+            
+            {# En-tête Midnight Blue & Gold #}
+            <div class="card-header text-white p-4 d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); border-bottom: 4px solid #D4AF37;">
+                <div>
+                    <span class="badge bg-white bg-opacity-10 text-uppercase fs-7 mb-1" style="color: #D4AF37;">Fiche d'information</span>
+                    <h4 class="fw-bold mb-0 text-white">{{ vente.numeroFacture }}</h4>
+                </div>
+                <div class="text-end">
+                    <span class="text-light text-opacity-75 small d-block">ID Vente</span>
+                    <span class="font-monospace fw-bold" style="color: #D4AF37;">#{{ vente.id }}</span>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <tbody>
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="width: 30%; background-color: #F8FAFC;">
+                                    <i class="fas fa-hashtag me-2 text-muted"></i>Id
+                                </th>
+                                <td class="ps-4 py-3 font-monospace fw-bold text-dark">
+                                    {{ vente.id }}
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="fas fa-receipt me-2 text-muted"></i>NumeroFacture
+                                </th>
+                                <td class="ps-4 py-3 fw-bold" style="color: #0F172A;">
+                                    {{ vente.numeroFacture }}
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="far fa-calendar-alt me-2 text-muted"></i>CreatetAt
+                                </th>
+                                <td class="ps-4 py-3 text-dark">
+                                    {{ vente.createtAt ? vente.createtAt|date('Y-m-d') : '' }}
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="fas fa-coins me-2 text-muted"></i>MontantTotalHt
+                                </th>
+                                <td class="ps-4 py-3 font-monospace fw-semibold text-dark">
+                                    {{ vente.montantTotalHt ? vente.montantTotalHt|number_format(0, ',', ' ') ~ ' FCFA' : '-' }}
+                                </td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="fas fa-percentage me-2 text-muted"></i>Quantite
+                                </th>
+                                <td class="ps-4 py-3 font-monospace text-muted">
+                                    {{ vente.ligneVentes | length }}
+                                </td>
+                            </tr>
+                            {# <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-uppercase fs-7 fw-bold" style="background-color: #F8FAFC; color: #0F172A;">
+                                    <i class="fas fa-calculator me-2" style="color: #D4AF37;"></i>MontantTotalTtc
+                                </th>
+                                <td class="ps-4 py-3 font-monospace fw-bold fs-5" style="color: #0F172A;">
+                                    {{ vente.montantTotalTtc ? vente.montantTotalTtc|number_format(0, ',', ' ') ~ ' FCFA' : (vente.montantTotalHt ? vente.montantTotalHt|number_format(0, ',', ' ') ~ ' FCFA' : '-') }}
+                                </td>
+                            </tr> #}
+                            <tr style="border-bottom: 1px solid #E2E8F0;">
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="fas fa-tag me-2 text-muted"></i>Remise
+                                </th>
+                                <td class="ps-4 py-3">
+                                    {% if vente.remise and vente.remise > 0 %}
+                                        <span class="badge bg-warning bg-opacity-20 text-dark border border-warning px-3 py-1">
+                                            -{{ vente.remise }}%
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">{{ vente.remise }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="ps-4 py-3 text-muted fw-bold text-uppercase fs-7" style="background-color: #F8FAFC;">
+                                    <i class="fas fa-wallet me-2 text-muted"></i>Statuspaiement
+                                </th>
+                                <td class="ps-4 py-3">
+                                    {% if vente.statuspaiement == 'PAYE' or vente.statuspaiement == 'PAYÉ' %}
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-3 py-2">
+                                            <i class="fas fa-check-circle me-1"></i>{{ vente.statuspaiement }}
+                                        </span>
+                                    {% elseif vente.statuspaiement == 'PARTIEL' %}
+                                        <span class="badge bg-warning bg-opacity-15 text-warning-emphasis border border-warning rounded-pill px-3 py-2">
+                                            <i class="fas fa-hourglass-half me-1"></i>{{ vente.statuspaiement }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-danger bg-opacity-10 text-danger border border-danger rounded-pill px-3 py-2">
+                                            <i class="fas fa-times-circle me-1"></i>{{ vente.statuspaiement }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Produit</th>
+                                    <th>QuentitePoids</th>
+                                    <th>PrixUnitaire</th>
+                                    <th>Motant</th>
+                                </tr>
+                                {% for item in vente.ligneVentes %}
+                                    <tr style="border-bottom: 1px solid #E2E8F0;">
+                                        <td>{{ item.id }}</td>
+                                        <td> <span class="text-muted">{{ item.produit.nomCommercial }}</span></td>
+                                        <td> <span class="text-muted">{{ item.quantitePoids }}</span></td>
+                                        <td> <span class="text-muted">{{ item.prixUnitaire }}</span></td>
+                                        <td><span class="text-muted">{{ item.quantitePoids * item.prixUnitaire }}</span></td>
+                                    </tr>
+                                {% endfor %}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            {# Pied de carte avec actions secondaires #}
+            <div class="card-footer bg-light py-3 px-4 d-flex justify-content-between align-items-center border-top">
+                <a href="{{ path('app_vente_index') }}" class="btn btn-sm btn-outline-dark">
+                    <i class="fas fa-list me-1"></i> back to list
+                </a>
+                <button onclick="window.print();" class="btn btn-sm btn-outline-secondary">
+                    <i class="fas fa-print me-1"></i> Imprimer
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -84,14 +84,21 @@
                             </div>
                         </div>
 
-                        {# Mot de passe #}
+                        {# Mot de passe avec option Afficher/Masquer #}
                         <div class="col-12">
                             {{ form_label(registrationForm.plainPassword, null, {'label_attr': {'class': 'form-label fw-bold text-dark'}}) }}
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted border-end-0">
                                     <i class="fas fa-lock" style="color: #D4AF37;"></i>
                                 </span>
-                                {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control border-start-0' ~ (registrationForm.plainPassword.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                                {{ form_widget(registrationForm.plainPassword, {
+                                    'attr': {
+                                        'class': 'form-control border-start-0 border-end-0' ~ (registrationForm.plainPassword.vars.errors|length > 0 ? ' is-invalid' : '')
+                                    }
+                                }) }}
+                                <button class="btn btn-outline-secondary bg-light border-start-0 text-muted" type="button" id="togglePasswordBtn">
+                                    <i class="fas fa-eye" id="togglePasswordIcon"></i> Voir
+                                </button>
                             </div>
                             <div class="invalid-feedback d-block">
                                 {{ form_errors(registrationForm.plainPassword) }}
@@ -132,4 +139,31 @@
         </div>
     </div>
 </div>
+
+{# Script JS révisé #}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+        const toggleIcon = document.getElementById('togglePasswordIcon');
+
+        if (togglePasswordBtn) {
+            togglePasswordBtn.addEventListener('click', function () {
+                // Recherche l'élément input situé dans le même groupe d'input
+                const inputGroup = this.closest('.input-group');
+                const passwordInput = inputGroup ? inputGroup.querySelector('input') : null;
+
+                if (passwordInput) {
+                    const isPassword = passwordInput.getAttribute('type') === 'password';
+                    passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+                    
+                    // Basculer l'icône fa-eye / fa-eye-slash
+                    if (toggleIcon) {
+                        toggleIcon.classList.toggle('fa-eye');
+                        toggleIcon.classList.toggle('fa-eye-slash');
+                    }
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

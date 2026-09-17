@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau Produit - Gestion des Stocks & Provenderie{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+
+<div class="container py-4">
+    {# Fil d'Ariane (Breadcrumb) #}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_produit_index') }}" class="text-decoration-none fw-bold" style="color: #0F172A;">
+                    <i class="fas fa-boxes me-1" style="color: #D4AF37;"></i>Catalogue Produits & Stocks
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Nouveau Produit</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                
+                {# En-tête de la Carte #}
+                <div class="card-header py-3 border-0 d-flex justify-content-between align-items-center" style="background-color: #0F172A; border-bottom: 3px solid #D4AF37 !important;">
+                    <div>
+                        <h1 class="h5 mb-0 fw-bold text-white d-flex align-items-center">
+                            <i class="fas fa-plus-circle me-2" style="color: #D4AF37;"></i>Ajouter un Produit / Aliment
+                        </h1>
+                        <p class="text-white-50 small mb-0 mt-1">
+                            Enregistrez un nouvel article, sac d'aliment ou intrant pour le suivi des stocks et ventes.
+                        </p>
+                    </div>
+                    <a href="{{ path('app_produit_index') }}" class="btn btn-sm btn-outline-light border-0 text-white font-weight-bold">
+                        <i class="fas fa-arrow-left me-1" style="color: #D4AF37;"></i>Retour à la liste
+                    </a>
+                </div>
+
+                {# Corps de la Carte #}
+                <div class="card-body p-4 bg-white">
+                    <div class="alert alert-light border-start border-4 mb-4" style="border-color: #D4AF37 !important; background-color: #F8FAFC;">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-info-circle fa-lg me-3" style="color: #0F172A;"></i>
+                            <small class="text-muted">
+                                Renseignez les informations requises ci-dessous pour intégrer l'article au catalogue général de votre établissement.
+                            </small>
+                        </div>
+                    </div>
+
+                    {{ include('produit/_form.html.twig', {'button_label': 'Enregistrer le Produit'}) }}
+                </div>
+
+                {# Pied de carte #}
+                <div class="card-footer bg-light p-3 text-center border-0">
+                    <small class="text-muted"><i class="fas fa-shield-alt me-1 text-primary"></i> Enregistrement sécurisé dans la base de données</small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

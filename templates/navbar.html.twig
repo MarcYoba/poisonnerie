@@ -16,12 +16,16 @@
         {# ==================== BIENS IMMOBILIERS ==================== #}
         <li class="nav-item dropdown mega-dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdownBiens" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-building me-1"></i> fonctionalite 1
+            <i class="fas fa-building me-1"></i> Produit  &amp; Stock
           </a>
           <div class="dropdown-menu mega-menu p-3" aria-labelledby="dropdownBiens" style="min-width: 32rem;">
             <div class="row g-4">
-              
-              
+              <div class="col-12">
+                <h6 class="dropdown-header"><i class="fas fa-users me-1"></i>Produit</h6>
+                <a class="dropdown-item" href="{{ path('app_produit_new') }}">Créer un produit</a>
+                <a class="dropdown-item" href="{{ path('app_produit_index') }}">Liste des produits</a>
+              </div>
+
             </div>
           </div>
         </li>
@@ -29,12 +33,15 @@
         {# ==================== LOCATAIRES & CONTRATS ==================== #}
         <li class="nav-item dropdown mega-dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdownLocatairesContrats" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-users me-1"></i> fonctionalite 2 &amp; autre
+            <i class="fas fa-users me-1"></i> Client &amp; Dette
           </a>
           <div class="dropdown-menu mega-menu p-3" aria-labelledby="dropdownLocatairesContrats" style="min-width: 32rem;">
             <div class="row g-4">
-              
-              
+              <div class="col-12">
+                <h6 class="dropdown-header"><i class="fas fa-users me-1"></i> Client</h6>
+                <a class="dropdown-item" href="{{ path('app_client_new') }}">Créer un client</a>
+                <a class="dropdown-item" href="{{ path('app_client_index') }}">Liste des clients</a>
+              </div>
             </div>
           </div>
         </li>
@@ -42,11 +49,15 @@
         {# ==================== PAIEMENTS ==================== #}
         <li class="nav-item dropdown mega-dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="dropdownPaiements" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-hand-holding-usd me-1"></i> fonctionalite 3
+            <i class="fas fa-hand-holding-usd me-1"></i> Vente &amp; Facture
           </a>
           <div class="dropdown-menu mega-menu p-3" aria-labelledby="dropdownPaiements" style="min-width: 20rem;">
             <div class="row g-4">
-              
+              <div class="col-12">
+                <h6 class="dropdown-header"><i class="fas fa-users me-1"></i> Vente</h6>
+                <a class="dropdown-item" href="{{ path('app_vente_new') }}">Créer une vente</a>
+                <a class="dropdown-item" href="{{ path('app_vente_index') }}">Liste des ventes</a>
+              </div>
               
             </div>
           </div>

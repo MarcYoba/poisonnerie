@@ -1,0 +1,76 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Produit - {{ produit.nomCommercial }}{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+
+<div class="container py-4">
+    {# Fil d'Ariane #}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_produit_index') }}" class="text-decoration-none fw-bold" style="color: #0F172A;">
+                    <i class="fas fa-boxes me-1" style="color: #D4AF37;"></i>Catalogue Produit
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="text-decoration-none text-muted">
+                    {{ produit.nomCommercial }}
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Modification</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                
+                {# En-tête de la Carte #}
+                <div class="card-header py-3 border-0 d-flex justify-content-between align-items-center" style="background-color: #0F172A; border-bottom: 3px solid #D4AF37 !important;">
+                    <div>
+                        <span class="badge mb-1 text-uppercase" style="background-color: #D4AF37; color: #0F172A;">Édition #{{ produit.id }}</span>
+                        <h1 class="h5 mb-0 fw-bold text-white d-flex align-items-center">
+                            <i class="fas fa-edit me-2" style="color: #D4AF37;"></i>Modifier le Produit
+                        </h1>
+                        <p class="text-white-50 small mb-0 mt-1">
+                            Ajustez les informations, la tarification ou les niveaux de stock.
+                        </p>
+                    </div>
+                    <a href="{{ path('app_produit_index') }}" class="btn btn-sm btn-outline-light border-0 text-white font-weight-bold">
+                        <i class="fas fa-arrow-left me-1" style="color: #D4AF37;"></i>Retour
+                    </a>
+                </div>
+
+                {# Corps de la Carte #}
+                <div class="card-body p-4 bg-white">
+                    <div class="alert alert-light border-start border-4 mb-4" style="border-color: #D4AF37 !important; background-color: #F8FAFC;">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-pen-square fa-lg me-3" style="color: #0F172A;"></i>
+                            <small class="text-muted">
+                                Vous modifiez actuellement la fiche de <strong>{{ produit.nomCommercial }}</strong>. Veillez à enregistrer vos modifications.
+                            </small>
+                        </div>
+                    </div>
+
+                    {{ include('produit/_form.html.twig', {'button_label': 'Mettre à jour le Produit'}) }}
+                </div>
+
+                {# Zone d'actions inférieures & Suppression #}
+                <div class="card-footer bg-light p-3 border-0 d-flex justify-content-between align-items-center">
+                    <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-eye me-1"></i>Voir la fiche produit
+                    </a>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="text-muted small me-2 d-none d-sm-inline">Zone dangereuse :</span>
+                        {{ include('produit/_delete_form.html.twig') }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

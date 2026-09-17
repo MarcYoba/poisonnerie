@@ -1,0 +1,45 @@
+{# 1. Bouton qui ouvre la modale #}
+<button type="button" class="btn btn-sm btn-outline-danger shadow-sm d-inline-flex align-items-center" data-bs-toggle="modal" data-bs-target="#deleteModal{{ produit.id }}" title="Supprimer le produit">
+    <i class="fas fa-trash-alt me-1"></i> Supprimer
+</button>
+
+{# 2. Fenêtre Modale de confirmation #}
+<div class="modal fade" id="deleteModal{{ produit.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ produit.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg rounded-3 overflow-hidden">
+            
+            {# En-tête de la modale #}
+            <div class="modal-header text-white py-3" style="background-color: #0F172A; border-bottom: 3px solid #D4AF37;">
+                <h5 class="modal-title h6 fw-bold d-flex align-items-center" id="deleteModalLabel{{ produit.id }}">
+                    <i class="fas fa-exclamation-triangle me-2 text-warning"></i> Confirmation de suppression
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+
+            {# Corps de la modale #}
+            <div class="modal-body p-4 text-start">
+                <p class="mb-1 text-dark fw-semibold">
+                    Voulez-vous vraiment supprimer définitivement cet article ?
+                </p>
+                <p class="small text-muted mb-0">
+                    <strong>Produit :</strong> {{ produit.nomCommercial|default('Article #' ~ produit.id) }}<br>
+                    <span class="text-danger"><i class="fas fa-info-circle me-1"></i> Cette action est irréversible et retirera le produit du suivi des stocks.</span>
+                </p>
+            </div>
+
+            {# Pied de la modale avec le formulaire de suppression #}
+            <div class="modal-footer bg-light border-0 py-2 d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-sm btn-secondary font-weight-bold" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                <form method="post" action="{{ path('app_produit_delete', {'id': produit.id}) }}" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ produit.id) }}">
+                    <button type="submit" class="btn btn-sm btn-danger fw-bold d-inline-flex align-items-center shadow-sm">
+                        <i class="fas fa-check-circle me-1"></i> Confirmer la suppression
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

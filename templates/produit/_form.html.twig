@@ -1,0 +1,112 @@
+{{ form_start(form, {'attr': {'class': 'p-4 bg-white rounded-3 shadow-sm border', 'style': 'border-color: #E2E8F0;'}}) }}
+
+    {# --- Message d'erreur global du formulaire --- #}
+    {% if not form.vars.valid %}
+        <div class="alert alert-danger border-start border-4 mb-4 shadow-sm rounded-2" role="alert" style="border-color: #DC2626 !important; background-color: #FEF2F2;">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle fa-lg me-3 text-danger" aria-hidden="true"></i>
+                <div>
+                    <strong class="d-block text-danger mb-1">Attention, le formulaire contient des erreurs</strong>
+                    <div class="small text-muted mb-0">{{ form_errors(form) }}</div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# --- Champ 'title' / Nom du produit --- #}
+    {% if form.title is defined %}
+        <div class="mb-3">
+            {{ form_label(form.title, 'Désignation / Nom du produit', {
+                'label_attr': {'class': 'form-label fw-bold small text-uppercase', 'style': 'color: #0F172A; letter-spacing: 0.5px;'}
+            }) }}
+            
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0" style="color: #0F172A; border-color: #CBD5E1;">
+                    <i class="fas fa-tag" aria-hidden="true"></i>
+                </span>
+                {{ form_widget(form.title, {
+                    'attr': {
+                        'class': 'form-control border-start-0 py-2 shadow-none' ~ (form.title.vars.errors|length > 0 ? ' is-invalid' : ''),
+                        'placeholder': 'ex: Aliment Démarrage Poussin 25kg, Sac de Maïs...',
+                        'style': 'border-color: #CBD5E1;'
+                    }
+                }) }}
+            </div>
+            
+            {% if form_errors(form.title) %}
+                <div class="invalid-feedback d-block small mt-1">
+                    <i class="fas fa-exclamation-circle me-1" aria-hidden="true"></i>
+                    {{ form_errors(form.title) }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {# --- Champ 'description' --- #}
+    {% if form.description is defined %}
+        <div class="mb-3">
+            {{ form_label(form.description, 'Description / Détails techniques', {
+                'label_attr': {'class': 'form-label fw-bold small text-uppercase', 'style': 'color: #0F172A; letter-spacing: 0.5px;'}
+            }) }}
+            
+            <div class="input-group">
+                <span class="input-group-text bg-light border-end-0 align-items-start pt-2" style="color: #0F172A; border-color: #CBD5E1;">
+                    <i class="fas fa-align-left mt-1" aria-hidden="true"></i>
+                </span>
+                {{ form_widget(form.description, {
+                    'attr': {
+                        'class': 'form-control border-start-0 py-2 shadow-none' ~ (form.description.vars.errors|length > 0 ? ' is-invalid' : ''),
+                        'rows': '4',
+                        'placeholder': 'Précisez la composition, le fournisseur, les consignes de stockage...',
+                        'style': 'border-color: #CBD5E1;'
+                    }
+                }) }}
+            </div>
+
+            {% if form_errors(form.description) %}
+                <div class="invalid-feedback d-block small mt-1">
+                    <i class="fas fa-exclamation-circle me-1" aria-hidden="true"></i>
+                    {{ form_errors(form.description) }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {# --- Champs optionnels sous forme de grille (Prix / Stock / Catégorie si présents) --- #}
+    {% if form.price is defined or form.stock is defined %}
+        <div class="row g-3 mb-3">
+            {% if form.price is defined %}
+                <div class="col-md-6">
+                    {{ form_label(form.price, null, {'label_attr': {'class': 'form-label fw-bold small text-uppercase', 'style': 'color: #0F172A;'}}) }}
+                    {{ form_widget(form.price, {'attr': {'class': 'form-control py-2 shadow-none', 'style': 'border-color: #CBD5E1;'}}) }}
+                    {{ form_errors(form.price) }}
+                </div>
+            {% endif %}
+            {% if form.stock is defined %}
+                <div class="col-md-6">
+                    {{ form_label(form.stock, null, {'label_attr': {'class': 'form-label fw-bold small text-uppercase', 'style': 'color: #0F172A;'}}) }}
+                    {{ form_widget(form.stock, {'attr': {'class': 'form-control py-2 shadow-none', 'style': 'border-color: #CBD5E1;'}}) }}
+                    {{ form_errors(form.stock) }}
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {# --- Rendu automatique des champs restants (CSRF token, champs additionnels) --- #}
+    {{ form_rest(form) }}
+
+    {# --- Boutons d'action --- #}
+    <div class="mt-4 pt-3 border-top d-flex justify-content-end align-items-center gap-2" style="border-color: #E2E8F0 !important;">
+        {% if app.request.headers.get('referer') %}
+            <a href="{{ app.request.headers.get('referer') }}" class="btn btn-light border text-secondary px-3 py-2 fw-medium me-auto">
+                <i class="fas fa-arrow-left me-1" aria-hidden="true"></i> Annuler
+            </a>
+        {% endif %}
+
+        <button type="submit" class="btn text-white fw-bold px-4 py-2 shadow-sm d-flex align-items-center" style="background-color: #0F172A; border-left: 4px solid #D4AF37;">
+            <i class="fas fa-save me-2" style="color: #D4AF37;" aria-hidden="true"></i>
+            {{ button_label|default('Enregistrer le Produit') }}
+        </button>
+    </div>
+
+{{ form_end(form) }}

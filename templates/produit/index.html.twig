@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Catalogue & Stock des Produits{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+
+<div class="container py-4">
+    {# Fil d'Ariane #}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active fw-bold" aria-current="page" style="color: #0F172A;">
+                <i class="fas fa-boxes me-1" style="color: #D4AF37;"></i>Catalogue Produit & Stocks
+            </li>
+        </ol>
+    </nav>
+
+    {# Carte principale #}
+    <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+        
+        {# En-tête de carte #}
+        <div class="card-header py-3 border-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3" style="background-color: #0F172A; border-bottom: 3px solid #D4AF37 !important;">
+            <div>
+                <h1 class="h4 mb-0 fw-bold text-white d-flex align-items-center">
+                    <i class="fas fa-cubes me-2" style="color: #D4AF37;"></i>Gestion des Produits & Intrants
+                </h1>
+                <p class="text-white-50 small mb-0 mt-1">
+                    Consultez l'état des stocks, la tarification et la gestion des articles enregistrés.
+                </p>
+            </div>
+            <a href="{{ path('app_produit_new') }}" class="btn text-white fw-bold shadow-sm d-inline-flex align-items-center text-nowrap" style="background-color: #D4AF37; color: #0F172A !important;">
+                <i class="fas fa-plus-circle me-2"></i>Nouveau Produit
+            </a>
+        </div>
+
+        {# Zone de contrôle & Tableau #}
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="text-uppercase small fw-bold" style="background-color: #F8FAFC; color: #0F172A;">
+                        <tr>
+                            <th class="ps-4 py-3">ID</th>
+                            <th class="py-3">Désignation</th>
+                            <th class="py-3">Nom Scientifique / Spécification</th>
+                            <th class="py-3 text-center">Unité</th>
+                            <th class="py-3 text-end">Prix Unitaire</th>
+                            <th class="py-3 text-center">Quantité Stock</th>
+                            <th class="pe-4 py-3 text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for produit in produits %}
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted">#{{ produit.id }}</td>
+                            <td>
+                                <span class="fw-bold d-block text-dark" style="color: #0F172A !important;">
+                                    {{ produit.nomCommercial }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if produit.nomScientifique %}
+                                    <span class="fst-italic text-muted small">{{ produit.nomScientifique }}</span>
+                                {% else %}
+                                    <span class="text-muted small">—</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-light text-dark border px-2 py-1">
+                                    {{ produit.unite|default('N/A') }}
+                                </span>
+                            </td>
+                            <td class="text-end fw-bold" style="color: #0F172A;">
+                                {{ produit.prix ? produit.prix|number_format(0, ',', ' ') ~ ' FCFA' : '0 FCFA' }}
+                            </td>
+                            <td class="text-center">
+                                {% if produit.quantite is defined and produit.quantite is not null %}
+                                    {% if produit.quantite <= 5 %}
+                                        <span class="badge bg-danger text-white rounded-pill px-3 py-1">
+                                            <i class="fas fa-exclamation-triangle me-1"></i>{{ produit.quantite }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-3 py-1">
+                                            {{ produit.quantite }}
+                                        </span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td class="pe-4 text-end">
+                                <div class="btn-group shadow-sm" role="group">
+                                    <a href="{{ path('app_produit_show', {'id': produit.id}) }}" class="btn btn-sm btn-outline-secondary" title="Voir les détails">
+                                        <i class="fas fa-eye text-primary"></i> Details
+                                    </a>
+                                    <a href="{{ path('app_produit_edit', {'id': produit.id}) }}" class="btn btn-sm btn-outline-secondary" title="Modifier">
+                                        <i class="fas fa-edit text-warning"></i> Edite
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="fas fa-box-open fa-3x mb-3" style="color: #CBD5E1;"></i>
+                                    <p class="mb-2 fw-semibold">Aucun produit enregistré pour le moment.</p>
+                                    <a href="{{ path('app_produit_new') }}" class="btn btn-sm text-white" style="background-color: #0F172A;">
+                                        Ajouter le premier produit
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {# Pied de carte / Statistiques globales #}
+        <div class="card-footer bg-light p-3 border-0 d-flex justify-content-between align-items-center text-muted small">
+            <span><i class="fas fa-list me-1"></i> Total : <strong>{{ produits|length }}</strong> produit(s)</span>
+            <span><i class="fas fa-shield-alt me-1 text-primary"></i> Données synchronisées</span>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

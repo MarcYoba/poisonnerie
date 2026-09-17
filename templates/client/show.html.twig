@@ -1,0 +1,166 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil Client - {{ client.nom }}{% endblock %}
+
+{% block body %}
+{% include "navbar.html.twig" %}
+
+<div class="container py-4">
+    {# Fil d'Ariane #}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ path('app_client_index') }}" class="text-decoration-none fw-bold" style="color: #0F172A;">
+                    <i class="fas fa-users me-1" style="color: #D4AF37;"></i>Gestion Clients
+                </a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{{ client.nom }}</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-9">
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+                
+                {# En-tête du profil #}
+                <div class="card-header py-3 border-0 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3" style="background-color: #0F172A; border-bottom: 3px solid #D4AF37 !important;">
+                    <div>
+                        <span class="badge mb-1 text-uppercase" style="background-color: #D4AF37; color: #0F172A;">Fiche Client #{{ client.id }}</span>
+                        <h1 class="h4 mb-0 fw-bold text-white d-flex align-items-center">
+                            <i class="fas fa-user-circle me-2" style="color: #D4AF37;"></i>{{ client.nom }}
+                        </h1>
+                        <p class="text-white-50 small mb-0 mt-1">
+                            Créé le {{ client.createtAt ? client.createtAt|date('d/m/Y à H:i') : 'Date non renseignée' }}
+                        </p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="{{ path('app_client_index') }}" class="btn btn-sm btn-outline-light border-0">
+                            <i class="fas fa-arrow-left me-1" style="color: #D4AF37;"></i>Retour
+                        </a>
+                        <a href="{{ path('app_client_edit', {'id': client.id}) }}" class="btn btn-sm text-white fw-bold" style="background-color: #D4AF37; color: #0F172A !important;">
+                            <i class="fas fa-edit me-1"></i>Modifier
+                        </a>
+                    </div>
+                </div>
+
+                {# Corps de la carte / Synthèse des KPI #}
+                <div class="card-body p-4 bg-white">
+                    <div class="row g-4 mb-4">
+                        
+                        {# Bloc Catégorie Client #}
+                        <div class="col-12 col-md-4">
+                            <div class="p-3 rounded-3 border bg-light h-100 border-start border-4" style="border-left-color: #0F172A !important;">
+                                <small class="text-uppercase fw-bold text-muted d-block mb-1">Type d'Acheteur</small>
+                                <span class="badge px-3 py-2 fs-6" style="background-color: #0F172A; color: #D4AF37;">
+                                    <i class="fas fa-id-badge me-1"></i>{{ client.typeClient|default('Non défini') }}
+                                </span>
+                            </div>
+                        </div>
+
+                        {# Bloc Solde / Crédit #}
+                        <div class="col-12 col-md-4">
+                            <div class="p-3 rounded-3 border bg-light h-100 border-start border-4" style="border-left-color: #D4AF37 !important;">
+                                <small class="text-uppercase fw-bold text-muted d-block mb-1">Solde Crédit / Encours</small>
+                                {% if client.soldeCredit is defined and client.soldeCredit > 0 %}
+                                    <span class="h5 fw-bold text-danger mb-0">
+                                        <i class="fas fa-exclamation-circle me-1"></i>{{ client.soldeCredit|number_format(0, ',', ' ') }} FCFA
+                                    </span>
+                                {% else %}
+                                    <span class="h5 fw-bold text-success mb-0">
+                                        <i class="fas fa-check-circle me-1"></i>{{ client.soldeCredit ? client.soldeCredit|number_format(0, ',', ' ') ~ ' FCFA' : '0 FCFA' }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Bloc Ancienneté #}
+                        <div class="col-12 col-md-4">
+                            <div class="p-3 rounded-3 border bg-light h-100 border-start border-4" style="border-left-color: #0F172A !important;">
+                                <small class="text-uppercase fw-bold text-muted d-block mb-1">Date d'Inauguration</small>
+                                <span class="h6 fw-bold text-dark mb-0 d-block mt-1">
+                                    <i class="fas fa-calendar-alt me-1" style="color: #D4AF37;"></i>
+                                    {{ client.createtAt ? client.createtAt|date('d/m/Y') : 'N/A' }}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    {# Table détaillée des informations #}
+                    <div class="table-responsive rounded-3 border mb-4">
+                        <table class="table table-striped align-middle mb-0">
+                            <tbody>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4" style="width: 35%;">Identifiant Client (ID)</th>
+                                    <td class="fw-bold ps-4">#{{ client.id }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Nom / Raison Sociale</th>
+                                    <td class="fw-bold ps-4" style="color: #0F172A;">{{ client.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Numéro de Téléphone</th>
+                                    <td class="ps-4">
+                                        {% if client.telephone %}
+                                            <a href="tel:{{ client.telephone }}" class="text-decoration-none fw-bold" style="color: #0F172A;">
+                                                <i class="fas fa-phone me-2" style="color: #D4AF37;"></i>{{ client.telephone }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted fst-italic">Non renseigné</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Adresse Email</th>
+                                    <td class="ps-4">
+                                        {% if client.email %}
+                                            <a href="mailto:{{ client.email }}" class="text-decoration-none text-dark">
+                                                <i class="fas fa-envelope me-2" style="color: #D4AF37;"></i>{{ client.email }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted fst-italic">Non renseignée</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Catégorie d'Acheteur</th>
+                                    <td class="ps-4 fw-bold">{{ client.typeClient|default('Non spécifiée') }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Encours / Solde Crédit</th>
+                                    <td class="ps-4 fw-bold">{{ client.soldeCredit ? client.soldeCredit|number_format(0, ',', ' ') ~ ' FCFA' : '0 FCFA' }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="bg-light text-muted small text-uppercase py-3 ps-4">Date d'Enregistrement</th>
+                                    <td class="ps-4">{{ client.createtAt ? client.createtAt|date('d/m/Y à H:i') : 'N/A' }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {# Zone d'actions inférieures #}
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top" style="border-color: #E2E8F0 !important;">
+                        <a href="{{ path('app_client_index') }}" class="btn btn-outline-secondary btn-sm">
+                            <i class="fas fa-list me-1"></i>Retour à la liste des clients
+                        </a>
+
+                        <div class="d-flex gap-2 align-items-center">
+                            <a href="{{ path('app_client_edit', {'id': client.id}) }}" class="btn btn-sm btn-outline-warning text-dark fw-bold">
+                                <i class="fas fa-edit me-1"></i>Modifier
+                            </a>
+                            {{ include('client/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+
+                </div>
+
+                {# Pied de carte #}
+                <div class="card-footer bg-light p-3 text-center border-0 text-muted small">
+                    <i class="fas fa-shield-alt me-1 text-primary"></i> Données client protégées et archivées dans le registre.
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

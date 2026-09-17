@@ -1,7 +1,239 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}Tableau de Bord - Poissonnerie{% endblock %}
 
 {% block body %}
 {% include "navbar.html.twig" %}
+
+<div class="container-fluid py-4 bg-light" style="color: #3f6fa0;">
+    {# --- EN-TÊTE PRINCIPAL DANS UNE CARD --- #}
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h1 class="h3 text-primary mb-0 fw-bold">
+                    <i class="fas fa-fish me-2"></i>Tableau de Bord - Gestion Poissonnerie
+                </h1>
+                <p class="text-muted small mb-0 mt-1">
+                    Suivi de l'activité commerciale, des stocks et de la traçabilité sanitaire.
+                </p>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle p-2">
+                    <i class="fas fa-clock me-1"></i>{{ "now"|date("d/m/Y H:i") }}
+                </span>
+                <a href="#" class="btn btn-sm btn-outline-primary" title="Actualiser">
+                    <i class="fas fa-sync-alt"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {# --- CARTES KPI (Saisie Ventes, Pertes, DLC) --- #}
+    <div class="row g-3 mb-4">
+        <!-- Card 1: CA du Jour -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 border-start border-primary border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-uppercase text-muted fw-bold small">CA Aujourd'hui</span>
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-2">
+                            <i class="fas fa-cash-register fa-lg"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-1">{{ ca_jour|default('450 000 FCFA') }}</h3>
+                    <div class="small text-success fw-bold">
+                        <i class="fas fa-arrow-up me-1"></i>+12% vs hier
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Poids Vendu -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 border-start border-info border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-uppercase text-muted fw-bold small">Poids Total Vendu</span>
+                        <div class="bg-info bg-opacity-10 text-info rounded-circle p-2">
+                            <i class="fas fa-weight-hanging fa-lg"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold text-dark mb-1">{{ poids_vendu|default('185.5 Kg') }}</h3>
+                    <div class="small text-muted">Vente à la pesée</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Pertes / Démarque -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 border-start border-danger border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-uppercase text-muted fw-bold small">Pertes & Casse</span>
+                        <div class="bg-danger bg-opacity-10 text-danger rounded-circle p-2">
+                            <i class="fas fa-trash-alt fa-lg"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold text-danger mb-1">{{ perte_jour|default('4.2 %') }}</h3>
+                    <div class="small text-muted">Nettoyage, découpe & avarie</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 4: Alertes DLC -->
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 border-start border-warning border-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-uppercase text-muted fw-bold small">Alertes DLC (≤ 24h)</span>
+                        <div class="bg-warning bg-opacity-10 text-warning rounded-circle p-2">
+                            <i class="fas fa-exclamation-triangle fa-lg"></i>
+                        </div>
+                    </div>
+                    <h3 class="fw-bold text-warning mb-1">{{ alertes_dlc_count|default('3 Lots') }}</h3>
+                    <div class="small text-warning fw-bold">Priorité transformation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# --- SECTION DES GRAPHIQUES EMBARQUÉS DANS DES CARDS --- #}
+    <div class="row g-4 mb-4">
+        <!-- Card Graphique 1 : Évolution des ventes -->
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-bottom-0 d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0 fw-bold text-dark">
+                        <i class="fas fa-chart-bar me-2 text-primary"></i>Évolution du Chiffre d'Affaires & Tonnage
+                    </h5>
+                    <span class="badge bg-light text-dark border">7 derniers jours</span>
+                </div>
+                <div class="card-body">
+                    {% if salesChart is defined and salesChart is not null %}
+                        {{ render_chart(salesChart, {'style': 'max-height: 320px;'}) }}
+                    {% else %}
+                        <div class="alert alert-info mb-0 border-0 shadow-sm">
+                            <i class="fas fa-info-circle me-2"></i>Passez la variable <code>salesChart</code> depuis votre Controller PHP pour afficher le graphique.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Graphique 2 : Ventilation par Catégorie -->
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h5 class="card-title mb-0 fw-bold text-dark">
+                        <i class="fas fa-chart-pie me-2 text-info"></i>Répartition par Espèce
+                    </h5>
+                </div>
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    {% if categoryChart is defined and categoryChart is not null %}
+                        <div class="w-100">
+                            {{ render_chart(categoryChart, {'style': 'max-height: 320px;'}) }}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info w-100 mb-0 border-0 shadow-sm">
+                            <i class="fas fa-info-circle me-2"></i>Passez la variable <code>categoryChart</code> depuis votre Controller.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# --- CARD DE TABLEAU : TRAÇABILITÉ & ARRIVAGES --- #}
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3 border-bottom-0 d-flex justify-content-between align-items-center">
+            <h5 class="card-title mb-0 fw-bold text-dark">
+                <i class="fas fa-boxes me-2 text-success"></i>Suivi des Lots & Traçabilité Sanitaire
+            </h5>
+            <a href="#" class="btn btn-sm btn-outline-primary">
+                <i class="fas fa-list me-1"></i>Voir tout le stock
+            </a>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-3">N° Lot</th>
+                            <th>Produit & Nom Scientifique</th>
+                            <th>Origine / Zone FAO</th>
+                            <th>Date Arrivage</th>
+                            <th>DLC</th>
+                            <th>Stock Restant</th>
+                            <th class="pe-3">Statut Sanitaire</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if lots is defined and lots is not empty %}
+                            {% for lot in lots %}
+                                <tr>
+                                    <td class="ps-3"><code>{{ lot.numeroLot }}</code></td>
+                                    <td>
+                                        <strong>{{ lot.nomCommercial }}</strong><br>
+                                        <small class="text-muted"><em>{{ lot.nomScientifique }}</em></small>
+                                    </td>
+                                    <td>{{ lot.zoneFao }}</td>
+                                    <td>{{ lot.dateArrivage|date('d/m/Y') }}</td>
+                                    <td>{{ lot.dlc|date('d/m/Y') }}</td>
+                                    <td><strong>{{ lot.stockKg }} Kg</strong></td>
+                                    <td class="pe-3">
+                                        {% if lot.statut == 'CRITIQUE' %}
+                                            <span class="badge bg-danger">DLC URGENTE</span>
+                                        {% elseif lot.statut == 'ATTENTION' %}
+                                            <span class="badge bg-warning text-dark">DLC Proche</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Conforme</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            {# Données de démonstration #}
+                            <tr>
+                                <td class="ps-3"><code>LOT-2026-0901</code></td>
+                                <td>
+                                    <strong>Loup de Mer (Bar)</strong><br>
+                                    <small class="text-muted"><em>Dicentrarchus labrax</em></small>
+                                </td>
+                                <td>Zone FAO 27 (Atlantique Nord-Est)</td>
+                                <td>16/09/2026</td>
+                                <td>19/09/2026</td>
+                                <td><strong>24.5 Kg</strong></td>
+                                <td class="pe-3"><span class="badge bg-success">Conforme</span></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-3"><code>LOT-2026-0895</code></td>
+                                <td>
+                                    <strong>Capitaine (Filet)</strong><br>
+                                    <small class="text-muted"><em>Polydactylus quadrifilis</em></small>
+                                </td>
+                                <td>Pêche Côticère Locale</td>
+                                <td>15/09/2026</td>
+                                <td>17/09/2026</td>
+                                <td><strong>8.0 Kg</strong></td>
+                                <td class="pe-3"><span class="badge bg-warning text-dark">DLC Proche</span></td>
+                            </tr>
+                            <tr>
+                                <td class="ps-3"><code>LOT-2026-0888</code></td>
+                                <td>
+                                    <strong>Dorade Royale</strong><br>
+                                    <small class="text-muted"><em>Sparus aurata</em></small>
+                                </td>
+                                <td>Zone FAO 37 (Méditerranée)</td>
+                                <td>14/09/2026</td>
+                                <td>18/09/2026</td>
+                                <td><strong>15.2 Kg</strong></td>
+                                <td class="pe-3"><span class="badge bg-success">Conforme</span></td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

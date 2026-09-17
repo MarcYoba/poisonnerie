@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -45,6 +47,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $actif = null;
+
+    /**
+     * @var Collection<int, Produit>
+     */
+    #[ORM\OneToMany(targetEntity: Produit::class, mappedBy: 'user')]
+    private Collection $produits;
+
+    /**
+     * @var Collection<int, Client>
+     */
+    #[ORM\OneToMany(targetEntity: Client::class, mappedBy: 'user')]
+    private Collection $clients;
+
+    /**
+     * @var Collection<int, Vente>
+     */
+    #[ORM\OneToMany(targetEntity: Vente::class, mappedBy: 'user')]
+    private Collection $ventes;
+
+    /**
+     * @var Collection<int, LigneVente>
+     */
+    #[ORM\OneToMany(targetEntity: LigneVente::class, mappedBy: 'user')]
+    private Collection $ligneVentes;
+
+    public function __construct()
+    {
+        $this->produits = new ArrayCollection();
+        $this->clients = new ArrayCollection();
+        $this->ventes = new ArrayCollection();
+        $this->ligneVentes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -171,6 +205,126 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActif(bool $actif): static
     {
         $this->actif = $actif;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Produit>
+     */
+    public function getProduits(): Collection
+    {
+        return $this->produits;
+    }
+
+    public function addProduit(Produit $produit): static
+    {
+        if (!$this->produits->contains($produit)) {
+            $this->produits->add($produit);
+            $produit->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduit(Produit $produit): static
+    {
+        if ($this->produits->removeElement($produit)) {
+            // set the owning side to null (unless already changed)
+            if ($produit->getUser() === $this) {
+                $produit->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Client>
+     */
+    public function getClients(): Collection
+    {
+        return $this->clients;
+    }
+
+    public function addClient(Client $client): static
+    {
+        if (!$this->clients->contains($client)) {
+            $this->clients->add($client);
+            $client->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeClient(Client $client): static
+    {
+        if ($this->clients->removeElement($client)) {
+            // set the owning side to null (unless already changed)
+            if ($client->getUser() === $this) {
+                $client->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Vente>
+     */
+    public function getVentes(): Collection
+    {
+        return $this->ventes;
+    }
+
+    public function addVente(Vente $vente): static
+    {
+        if (!$this->ventes->contains($vente)) {
+            $this->ventes->add($vente);
+            $vente->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVente(Vente $vente): static
+    {
+        if ($this->ventes->removeElement($vente)) {
+            // set the owning side to null (unless already changed)
+            if ($vente->getUser() === $this) {
+                $vente->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LigneVente>
+     */
+    public function getLigneVentes(): Collection
+    {
+        return $this->ligneVentes;
+    }
+
+    public function addLigneVente(LigneVente $ligneVente): static
+    {
+        if (!$this->ligneVentes->contains($ligneVente)) {
+            $this->ligneVentes->add($ligneVente);
+            $ligneVente->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLigneVente(LigneVente $ligneVente): static
+    {
+        if ($this->ligneVentes->removeElement($ligneVente)) {
+            // set the owning side to null (unless already changed)
+            if ($ligneVente->getUser() === $this) {
+                $ligneVente->setUser(null);
+            }
+        }
 
         return $this;
     }
